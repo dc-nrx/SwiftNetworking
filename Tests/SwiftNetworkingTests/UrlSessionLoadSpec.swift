@@ -10,9 +10,7 @@ import SwiftNetworking
 
 final class UrlSessionLoadSpec: XCTestCase {
 
-	let cardsURL = URL(string: "https://api.magicthegathering.io/v1/cards?pageSize=2")!
-	
-	lazy var cardsResource = Target<CardsResponse>(url: cardsURL)
+	let mtgApi = MtgApiImpl()
 	
 	override func setUpWithError() throws {
 		 
@@ -23,11 +21,9 @@ final class UrlSessionLoadSpec: XCTestCase {
 	}
 
 	func testLoad() async throws {
-		let cards = try await NetworkServiceMock().request(cardsResource).cards
+		let target = try mtgApi.cards(page: 0, query: nil)
+		let cards = try await NetworkServiceMock().request(target).cards
 		XCTAssertEqual(cards.count, 2)
 	}
 	
-//	func testHeadersMerge_noCollisions_allPresent() {
-//		
-//	}
 }

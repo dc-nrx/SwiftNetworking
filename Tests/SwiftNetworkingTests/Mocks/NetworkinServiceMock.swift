@@ -14,8 +14,4 @@ class NetworkServiceMock: NetworkService, HeadersProvider {
 		"auth": "azaza"
 	]
 	
-//	func request<T>(_ target: Target<T>, headers: [String : String]) async throws -> T {
-//		let extendedHeaders = authHeaders.merging(headers, uniquingKeysWith: { $1 })
-//		return try await request(target, extendedHeaders: extendedHeaders)
-//	}
 }

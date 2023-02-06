@@ -18,7 +18,7 @@ public protocol NetworkService {
 
 public extension NetworkService {
 
-	/// Shorthand
+	/// Main method - Shorthand
 	func request<T> (
 		_ target: Target<T>
 	) async throws -> T {
@@ -39,9 +39,7 @@ public extension NetworkService {
 		extendedHeaders: [String: String]?,
 		session: URLSession = .shared
 	) async throws -> T {
-		var request = URLRequest(url: target.url)
-		request.allHTTPHeaderFields = extendedHeaders
-		request.httpMethod = target.method.rawValue
+		let request = URLRequest(target: target, headers: extendedHeaders)
 		let (data, _) = try await session.data(for: request)
 		return try target.parse(data)
 	}
@@ -51,6 +49,7 @@ public protocol HeadersProvider {
 	var headers: [String: String] { get }
 }
 
+/// Shorthand to just use custom headers and attach them automatically
 public extension NetworkService where Self: HeadersProvider {
 	
 	func request<T> (
