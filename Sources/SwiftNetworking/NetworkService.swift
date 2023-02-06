@@ -25,7 +25,10 @@ public extension NetworkService {
 		try await request(target, headers: [:])
 	}
 	
-	/// Default implementation (assumes no additional headers like Authorization stuff)
+	/**
+	 Default implementation (assumes no additional headers like Authorization stuff). If additional headers needed,
+	 just conform to `HeaderProvider` - then another default implementation of the method will trigger (see below).
+	 */
 	func request<T> (
 		_ target: Target<T>,
 		headers: [String: String]
