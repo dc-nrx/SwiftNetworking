@@ -7,17 +7,18 @@
 
 import Foundation
 
-public typealias Query = [String: CustomStringConvertible]
+public typealias Query = [String: String?]
 public typealias Headers = [String: String]
 
 public extension URLRequest {
 	
 	init<T>(
-		target: Target<T>,
-		headers: Headers? = nil,
-		query: Query? = nil
+		request: SwiftNetworking.Request<T>
 	) {
-		self.init(url: target.url, httpMethod: target.method.rawValue, headers: headers, query: query)
+		self.init(url: request.url,
+				  httpMethod: request.method.rawValue,
+				  headers: request.headers,
+				  query: request.query)
 	}
 	
 	init(
@@ -26,7 +27,11 @@ public extension URLRequest {
 		headers: Headers? = nil,
 		query: Query? = nil
 	) {
-		self.init(url: url)
+		var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+		urlComponents.queryItems = query?.map { URLQueryItem(name: $0, value: $1) }
+		urlComponents.percentEncodedQuery = urlComponents.percentEncodedQuery?.replacingOccurrences(of: "+", with: "%2B")
+		
+		self.init(url: urlComponents.url!)
 		self.allHTTPHeaderFields = headers
 		self.httpMethod = httpMethod
 	}

@@ -15,23 +15,25 @@ public protocol MtgAPI {
 
 public final class MtgApiImpl: NetworkService, HeadersProvider {
 	
-	typealias Endpoint = String
-	
 	private let host = "https://api.magicthegathering.io"
 	private let apiVer = "v1"
-	
-	// Endpoint paths
-	private let cardsPath: Endpoint = "cards"
-	private let typesPath: Endpoint = "types"
-	
+		
 	public var headers = [
 		"auth": "Bearer AZAZA"
 	]
 	
 	public init() { }
+}
+
+private extension MtgApiImpl {
+	
+	enum Endpoint: String {
+		case cards
+		case types
+	}
 	
 	private func url(for endpoint: Endpoint) -> URL {
-		URL(host: host, path: apiVer + "/" + endpoint)
+		URL(host: host, path: apiVer + "/" + endpoint.rawValue)
 	}
 }
 
@@ -41,26 +43,10 @@ extension MtgApiImpl: MtgAPI {
 		page: Int,
 		query: Query?
 	) throws -> Target<CardsResponse> {
-		Target<CardsResponse>(url: url(for: cardsPath), method: .GET)
+		Target<CardsResponse>(url: url(for: .cards), method: .GET)
 	}
 	
 	public func types() throws -> Target<TypesResponse> {
-		Target<TypesResponse>(url: url(for: typesPath), method: .GET)
+		Target<TypesResponse>(url: url(for: .types), method: .GET)
 	}
-}
-
-public struct CardsResponse: Decodable {
-	public let cards: [Card]
-}
-
-public struct Card: Decodable {
-		
-	public let name: String
-	public let id: String
-	public let imageUrl: String?
-}
-
-public struct TypesResponse: Decodable {
-	
-	public let types: [String]
 }

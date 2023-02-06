@@ -21,14 +21,14 @@ final class UrlSessionLoadSpec: XCTestCase {
 	}
 
 	func testLoad_100Cards() async throws {
-		let target = try mtgApi.cards(page: 0, query: nil)
-		let cards = try await mtgApi.request(target).cards
+		let request = try mtgApi.cards(query: nil)
+		let cards = try await mtgApi.request(request).cards
 		XCTAssertEqual(cards.count, 100)
 	}
 	
 	func testLoad_Types() async throws {
-		let target = try mtgApi.types()
-		let cards = try await mtgApi.request(target).types
+		let request = try mtgApi.types()
+		let cards = try await mtgApi.request(request).types
 		XCTAssertEqual(cards.count, 28)
 	}
 }
