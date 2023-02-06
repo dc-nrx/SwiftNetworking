@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Request<T> {
+public struct RequestInfo<T> {
 
 	public enum Method: String {
 		case POST, GET, PUT, PATCH, DELETE
@@ -35,7 +35,7 @@ public struct Request<T> {
 	
 }
 
-public extension Request where T: Decodable {
+public extension RequestInfo where T: Decodable {
 	
 	init(
 		url: URL,

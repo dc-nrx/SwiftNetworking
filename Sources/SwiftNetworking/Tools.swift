@@ -13,12 +13,12 @@ public typealias Headers = [String: String]
 public extension URLRequest {
 	
 	init<T>(
-		request: SwiftNetworking.Request<T>
+		_ requestInfo: SwiftNetworking.RequestInfo<T>
 	) {
-		self.init(url: request.url,
-				  httpMethod: request.method.rawValue,
-				  headers: request.headers,
-				  query: request.query)
+		self.init(url: requestInfo.url,
+				  httpMethod: requestInfo.method.rawValue,
+				  headers: requestInfo.headers,
+				  query: requestInfo.query)
 	}
 	
 	init(
