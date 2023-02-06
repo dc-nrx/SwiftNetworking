@@ -31,3 +31,12 @@ public extension URLRequest {
 		self.httpMethod = httpMethod
 	}
 }
+
+public extension URL {
+	init!(
+		host: String,
+		path: String
+	) {
+		self.init(string: host + "/" + path)!
+	}
+}

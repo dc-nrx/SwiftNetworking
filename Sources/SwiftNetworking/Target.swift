@@ -14,16 +14,30 @@ public struct Target<T> {
 	}
 
 	let url: URL
-	let method: Method = .GET
+	let method: Method
 	let parse: (Data) throws -> T
+	
+	init(
+		url: URL,
+		method: Method,
+		parse: @escaping (Data) throws -> T
+	) {
+		self.url = url
+		self.method = method
+		self.parse = parse
+	}
+	
 }
 
 public extension Target where T: Decodable {
 	
-	init(url: URL) {
-		self.url = url
-		self.parse = { data in
+	init(
+		url: URL,
+		method: Method
+	) {
+		self.init(url: url, method: method) { data in
 			try JSONDecoder().decode(T.self, from: data)
-   		}
+		}
+		
 	}
 }
