@@ -7,16 +7,27 @@
 
 import Foundation
 
-public protocol HeadersProvider {
-	var headers: [String: String] { get }
+/**
+ Adds headers to `RequestInfo` such as authorization, preffered language etc.
+ */
+public protocol RequestSigniner {
+	
+	func sign<T>(_ requestInfo: inout RequestInfo<T>)
+	func refreshToken() async throws
+	func tokenRefreshRequired(error: Error?) -> Bool
 }
 
+/**
+ The main protocol for sending requests / parsing responses. Has default implementation that handles request signing (and subsequent request re-sending if appropriate).
+ */
 public protocol NetworkService {
+
+	var requestSigner: RequestSigniner? { get }
 	
 	func request<T> (
 		_ requestInfo: RequestInfo<T>
 	) async throws -> T
-	
+
 }
 
 public extension NetworkService {
@@ -28,33 +39,33 @@ public extension NetworkService {
 	func request<T> (
 		_ requestInfo: RequestInfo<T>
 	) async throws -> T {
-		try await request(requestInfo)
+		try await _NetworkService_request(requestInfo)
 	}
 		
 }
 
-/// Shorthand to just use custom headers and attach them automatically
-public extension NetworkService where Self: HeadersProvider {
-	
-	func request<T> (
-		_ requestInfo: RequestInfo<T>
-	) async throws -> T {
-		var requestInfoWithExtendedHeaders = requestInfo
-		requestInfoWithExtendedHeaders.headers = requestInfo.headers.merging(headers, uniquingKeysWith: { $1 })
-		return try await self._NetworkService_request(requestInfoWithExtendedHeaders)
-	}
-	
-}
-
 private extension NetworkService {
 	
-	/// The final destination of default implementations. Builds and sends the request.
 	func _NetworkService_request<T> (
 		_ requestInfo: RequestInfo<T>,
-		session: URLSession = .shared
+		session: URLSession = .shared,
+		repeatedRequest: Bool = false
 	) async throws -> T {
+		var signedRequest = requestInfo
+		requestSigner?.sign(&signedRequest)
 		let urlRequest = URLRequest(requestInfo)
-		let (data, _) = try await session.data(for: urlRequest)
-		return try requestInfo.parse(data)
+		do {
+			let (data, _) = try await session.data(for: urlRequest)
+			return try requestInfo.parse(data)
+		} catch {
+			if !repeatedRequest,
+			   let requestSigner = requestSigner,
+			   requestSigner.tokenRefreshRequired(error: error) {
+				try await requestSigner.refreshToken()
+				return try await _NetworkService_request(requestInfo, session: session, repeatedRequest: true)
+			} else {
+				throw error
+			}
+		}
 	}
 }
