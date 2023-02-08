@@ -10,10 +10,10 @@ import Foundation
 /**
  Adds headers to `RequestInfo` such as authorization, preffered language etc.
  */
-public protocol RequestSigniner {
+public protocol RequestSigniner: AnyObject {
 	
 	func sign<T>(_ requestInfo: inout RequestInfo<T>)
-	func refreshToken() async throws
+	func performTokenRefresh() async throws
 	func tokenRefreshRequired(error: Error?) -> Bool
 }
 
@@ -51,21 +51,27 @@ private extension NetworkService {
 		session: URLSession = .shared,
 		repeatedRequest: Bool = false
 	) async throws -> T {
+		// Sign the request
 		var signedRequest = requestInfo
 		requestSigner?.sign(&signedRequest)
-		let urlRequest = URLRequest(requestInfo)
+		let urlRequest = URLRequest(signedRequest)
+		// Send it
 		do {
 			let (data, _) = try await session.data(for: urlRequest)
 			return try requestInfo.parse(data)
+		// Try to refresh token and repeat the process if it's the first attempt (and if appropriate).
 		} catch {
+			// Check conditions
 			if !repeatedRequest,
-			   let requestSigner = requestSigner,
-			   requestSigner.tokenRefreshRequired(error: error) {
-				try await requestSigner.refreshToken()
+			   requestSigner?.tokenRefreshRequired(error: error) == true {
+				// Refresh token
+				try await requestSigner?.performTokenRefresh()
+				// Recursive call
 				return try await _NetworkService_request(requestInfo, session: session, repeatedRequest: true)
 			} else {
 				throw error
 			}
 		}
 	}
+	
 }
