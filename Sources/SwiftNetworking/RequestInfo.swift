@@ -40,11 +40,26 @@ public extension RequestInfo where T: Decodable {
 	init(
 		url: URL,
 		method: Method,
-		query: Query? = nil
+		query: Query? = nil,
+		headers: Headers = [:]
 	) {
-		self.init(url: url, method: method, query: query) { data in
+		self.init(url: url, method: method, query: query, headers: headers) { data in
 			try JSONDecoder().decode(T.self, from: data)
 		}
-		
 	}
 }
+
+public extension RequestInfo where T == () {
+	
+	init(
+		url: URL,
+		method: Method,
+		query: Query? = nil,
+		headers: Headers = [:]
+	) {
+		self.init(url: url, method: method, query: query, headers: headers) { _ in
+			return ()
+		}
+	}
+}
+
