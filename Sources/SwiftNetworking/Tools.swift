@@ -7,18 +7,17 @@
 
 import Foundation
 
-public typealias Query = [String: String?]
 public typealias Headers = [String: String]
 
 public extension URLRequest {
 	
-	init<T>(
-		_ requestInfo: SwiftNetworking.RequestInfo<T>
+	init<T: TargetType>(
+		_ target: T
 	) {
-		self.init(url: requestInfo.url,
-				  httpMethod: requestInfo.method.rawValue,
-				  headers: requestInfo.headers,
-				  query: requestInfo.query)
+		self.init(url: target.url,
+				  httpMethod: target.method.rawValue,
+				  headers: target.headers,
+				  query: [:])
 	}
 	
 	init(

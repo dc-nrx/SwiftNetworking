@@ -12,7 +12,7 @@ import Foundation
  */
 public protocol RequestSigniner: AnyObject {
 	
-	func sign<T>(_ requestInfo: inout RequestInfo<T>)
+	func sign(_ requestInfo: inout some TargetType)
 	func performTokenRefresh() async throws
 	func tokenRefreshRequired(error: Error?) -> Bool
 }
@@ -24,9 +24,9 @@ public protocol NetworkService {
 
 	var requestSigner: RequestSigniner? { get }
 	
-	func request<T> (
-		_ requestInfo: RequestInfo<T>
-	) async throws -> T
+	func request<T: TargetType> (
+		_ target: T
+	) async throws -> T.Response
 
 }
 
@@ -36,29 +36,30 @@ public extension NetworkService {
 	 Default implementation (assumes no additional headers like Authorization stuff). If additional headers needed,
 	 just conform to `HeaderProvider` - then another default implementation of the method will trigger (see below).
 	 */
-	func request<T> (
-		_ requestInfo: RequestInfo<T>
-	) async throws -> T {
-		try await _NetworkService_request(requestInfo)
+	func request<T: TargetType> (
+		_ target: T
+	) async throws -> T.Response {
+		try await _NetworkService_request(target)
 	}
 		
 }
 
 private extension NetworkService {
 	
-	func _NetworkService_request<T> (
-		_ requestInfo: RequestInfo<T>,
+	func _NetworkService_request<T: TargetType> (
+		_ target: T,
 		session: URLSession = .shared,
 		repeatedRequest: Bool = false
-	) async throws -> T {
+	) async throws -> T.Response {
 		// Sign the request
-		var signedRequest = requestInfo
-		requestSigner?.sign(&signedRequest)
-		let urlRequest = URLRequest(signedRequest)
+		var signedTarget = target
+		requestSigner?.sign(&signedTarget)
+		let urlRequest = URLRequest(target)
+		print("### \(urlRequest)")
 		// Send it
 		do {
 			let (data, _) = try await session.data(for: urlRequest)
-			return try requestInfo.parse(data)
+			return try target.parse(data)
 		// Try to refresh token and repeat the process if it's the first attempt (and if appropriate).
 		} catch {
 			// Check conditions
@@ -67,7 +68,7 @@ private extension NetworkService {
 				// Refresh token
 				try await requestSigner?.performTokenRefresh()
 				// Recursive call
-				return try await _NetworkService_request(requestInfo, session: session, repeatedRequest: true)
+				return try await _NetworkService_request(target, session: session, repeatedRequest: true)
 			} else {
 				throw error
 			}
