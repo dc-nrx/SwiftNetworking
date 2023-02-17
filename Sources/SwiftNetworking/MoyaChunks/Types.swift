@@ -18,9 +18,3 @@ public enum ParameterEncoding {
 }
 
 public typealias DownloadDestination = String
-
-//public typealias JSONEncoding = Alamofire.JSONEncoding
-//public typealias URLEncoding = Alamofire.URLEncoding
-//
-///// Multipart form.
-//public typealias RequestMultipartFormData = Alamofire.MultipartFormData

@@ -16,13 +16,13 @@ public enum Task {
     case requestCustomJSONEncodable(Encodable, encoder: JSONEncoder)
 
     /// A requests body set with encoded parameters.
-    case requestParameters(parameters: [String: Any], encoding: ParameterEncoding)
+    case requestParameters(parameters: Query?) //, encoding: ParameterEncoding)
 
     /// A requests body set with data, combined with url parameters.
     case requestCompositeData(bodyData: Data, urlParameters: [String: Any])
 
     /// A requests body set with encoded parameters combined with url parameters.
-    case requestCompositeParameters(bodyParameters: [String: Any], bodyEncoding: ParameterEncoding, urlParameters: [String: Any])
+    case requestCompositeParameters(bodyParameters: Query, bodyEncoding: ParameterEncoding, urlParameters: Query?)
 
     /// A file upload task.
     case uploadFile(URL)

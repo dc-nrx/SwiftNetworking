@@ -17,7 +17,7 @@ public extension URLRequest {
 		self.init(url: target.url,
 				  httpMethod: target.method.rawValue,
 				  headers: target.headers,
-				  query: [:])
+				  query: target.query)
 	}
 	
 	init(

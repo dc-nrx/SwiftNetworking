@@ -10,9 +10,13 @@ import Foundation
 /**
  Adds headers to `RequestInfo` such as authorization, preffered language etc.
  */
-public protocol RequestSigniner: AnyObject {
+public protocol RequestPreprocessor: AnyObject {
 	
-	func sign(_ requestInfo: inout some TargetType)
+	func preprocess(_ target: inout some TargetType)
+}
+
+public protocol AuthorizationHandler {
+
 	func performTokenRefresh() async throws
 	func tokenRefreshRequired(error: Error?) -> Bool
 }
@@ -22,12 +26,12 @@ public protocol RequestSigniner: AnyObject {
  */
 public protocol NetworkService {
 
-	var requestSigner: RequestSigniner? { get }
-	
+	var requestPreprocessor: RequestPreprocessor? { get }
+	var authorizationHandler: AuthorizationHandler? { get }
+
 	func request<T: TargetType> (
 		_ target: T
 	) async throws -> T.Response
-
 }
 
 public extension NetworkService {
@@ -53,20 +57,19 @@ private extension NetworkService {
 	) async throws -> T.Response {
 		// Sign the request
 		var signedTarget = target
-		requestSigner?.sign(&signedTarget)
-		let urlRequest = URLRequest(target)
-		print("### \(urlRequest)")
+		requestPreprocessor?.preprocess(&signedTarget)
+		let urlRequest = URLRequest(signedTarget)
 		// Send it
 		do {
 			let (data, _) = try await session.data(for: urlRequest)
-			return try target.parse(data)
+			return try signedTarget.parse(data)
 		// Try to refresh token and repeat the process if it's the first attempt (and if appropriate).
 		} catch {
 			// Check conditions
 			if !repeatedRequest,
-			   requestSigner?.tokenRefreshRequired(error: error) == true {
+				authorizationHandler?.tokenRefreshRequired(error: error) == true {
 				// Refresh token
-				try await requestSigner?.performTokenRefresh()
+				try await authorizationHandler?.performTokenRefresh()
 				// Recursive call
 				return try await _NetworkService_request(target, session: session, repeatedRequest: true)
 			} else {

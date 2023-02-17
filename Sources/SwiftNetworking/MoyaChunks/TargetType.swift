@@ -43,12 +43,23 @@ public extension TargetType where Response: Decodable {
 
 public extension TargetType where Response == () {
 
-	var parser: Parser { { _ in () } }
+	var parse: Parser { { _ in () } }
 }
 
+/// Sugar
 public extension TargetType {
 	
 	var url: URL {
 		URL(string: baseURL.absoluteString + "/" + path)!
+	}
+	
+	var query: Query? {
+		switch task {
+		case .requestParameters(let query),
+				.requestCompositeParameters(_, _, let query):
+			return query
+		default:
+			return nil
+		}
 	}
 }
