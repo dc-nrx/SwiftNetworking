@@ -11,8 +11,6 @@ public enum Method: String {
 	case POST, GET, PUT, PATCH, DELETE
 }
 
-public typealias Query = [String: String]
-
 public enum ParameterEncoding {
 	case nothingSpecial // to be extended in case of need
 }

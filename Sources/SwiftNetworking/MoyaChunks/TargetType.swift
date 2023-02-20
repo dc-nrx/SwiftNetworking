@@ -17,8 +17,8 @@ public protocol TargetType {
     /// The HTTP method used in the request.
     var method: Method { get }
 
-    /// The type of HTTP task to be performed.
-	var task: Task { get }
+    /// Incapsulates the parameters and instructions how to attach them (via query, body, etc.)
+	var payload: Payload { get }
 
     /// The type of validation to perform on the request. Default is `.none`.
     var validationType: ValidationType { get }
@@ -26,6 +26,7 @@ public protocol TargetType {
     /// The headers to be used in the request.
     var headers: Headers? { get set }
 	
+	/// The parsing closure. Has default implementations for `()` and `Decodable` response types.
 	var parse: Parser { get }
 }
 
@@ -54,9 +55,9 @@ public extension TargetType {
 	}
 	
 	var query: Query? {
-		switch task {
-		case .requestParameters(let query),
-				.requestCompositeParameters(_, _, let query):
+		switch payload {
+		case .query(let query),
+				.composite(_, let query):
 			return query
 		default:
 			return nil
