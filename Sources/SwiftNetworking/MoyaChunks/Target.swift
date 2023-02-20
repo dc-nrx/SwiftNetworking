@@ -3,7 +3,7 @@ import Foundation
 //public enum TargetParser
 
 /// The protocol used to define the specifications necessary for a `MoyaProvider`.
-public protocol Endpoint {
+public protocol Target {
 
 	associatedtype Response = ()
 	typealias Parser = (Data) throws -> Response
@@ -30,23 +30,23 @@ public protocol Endpoint {
 	var parse: Parser { get }
 }
 
-public extension Endpoint {
+public extension Target {
 
     var validationType: ValidationType { .none }	
 }
 
-public extension Endpoint where Response: Decodable {
+public extension Target where Response: Decodable {
 	
 	var parse: Parser { { try JSONDecoder().decode(Response.self, from: $0) } }
 }
 
-public extension Endpoint where Response == () {
+public extension Target where Response == () {
 
 	var parse: Parser { { _ in () } }
 }
 
 /// Sugar
-public extension Endpoint {
+public extension Target {
 	
 	var url: URL {
 		URL(string: baseURL.absoluteString + "/" + path)!

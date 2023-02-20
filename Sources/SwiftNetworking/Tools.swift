@@ -11,7 +11,7 @@ public typealias Headers = [String: String]
 
 public extension URLRequest {
 	
-	init<T: Endpoint>(
+	init<T: Target>(
 		_ target: T
 	) {
 		self.init(url: target.url,

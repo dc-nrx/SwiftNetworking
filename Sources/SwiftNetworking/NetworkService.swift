@@ -12,7 +12,7 @@ import Foundation
  */
 public protocol RequestPreprocessor: AnyObject {
 	
-	func preprocess(_ target: inout some Endpoint)
+	func preprocess(_ target: inout some Target)
 }
 
 public protocol AuthorizationHandler {
@@ -29,7 +29,7 @@ public protocol NetworkService {
 	var requestPreprocessor: RequestPreprocessor? { get }
 	var authorizationHandler: AuthorizationHandler? { get }
 
-	func request<T: Endpoint> (
+	func request<T: Target> (
 		_ target: T
 	) async throws -> T.Response
 }
@@ -40,17 +40,20 @@ public extension NetworkService {
 	 Default implementation (assumes no additional headers like Authorization stuff). If additional headers needed,
 	 just conform to `HeaderProvider` - then another default implementation of the method will trigger (see below).
 	 */
-	func request<T: Endpoint> (
+	func request<T: Target> (
 		_ target: T
 	) async throws -> T.Response {
-		try await _NetworkService_request(target)
+		try await _recursive_request(target)
 	}
 		
 }
 
 private extension NetworkService {
 	
-	func _NetworkService_request<T: Endpoint> (
+	/**
+	 The default implementation takes care of request preprocessing and handles token expiration case.
+	 */
+	func _recursive_request<T: Target> (
 		_ target: T,
 		session: URLSession = .shared,
 		repeatedRequest: Bool = false
@@ -71,7 +74,7 @@ private extension NetworkService {
 				// Refresh token
 				try await authorizationHandler?.performTokenRefresh()
 				// Recursive call
-				return try await _NetworkService_request(target, session: session, repeatedRequest: true)
+				return try await _recursive_request(target, session: session, repeatedRequest: true)
 			} else {
 				throw error
 			}
