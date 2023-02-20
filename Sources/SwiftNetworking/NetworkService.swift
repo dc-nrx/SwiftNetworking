@@ -12,7 +12,7 @@ import Foundation
  */
 public protocol RequestPreprocessor: AnyObject {
 	
-	func preprocess(_ target: inout some TargetType)
+	func preprocess(_ target: inout some Endpoint)
 }
 
 public protocol AuthorizationHandler {
@@ -29,7 +29,7 @@ public protocol NetworkService {
 	var requestPreprocessor: RequestPreprocessor? { get }
 	var authorizationHandler: AuthorizationHandler? { get }
 
-	func request<T: TargetType> (
+	func request<T: Endpoint> (
 		_ target: T
 	) async throws -> T.Response
 }
@@ -40,7 +40,7 @@ public extension NetworkService {
 	 Default implementation (assumes no additional headers like Authorization stuff). If additional headers needed,
 	 just conform to `HeaderProvider` - then another default implementation of the method will trigger (see below).
 	 */
-	func request<T: TargetType> (
+	func request<T: Endpoint> (
 		_ target: T
 	) async throws -> T.Response {
 		try await _NetworkService_request(target)
@@ -50,7 +50,7 @@ public extension NetworkService {
 
 private extension NetworkService {
 	
-	func _NetworkService_request<T: TargetType> (
+	func _NetworkService_request<T: Endpoint> (
 		_ target: T,
 		session: URLSession = .shared,
 		repeatedRequest: Bool = false
