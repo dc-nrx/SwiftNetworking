@@ -1,6 +1,8 @@
 import Foundation
 
-//public enum TargetParser
+public enum HTTPMethod: String {
+	case POST, GET, PUT, PATCH, DELETE
+}
 
 /// The protocol used to define the specifications necessary for a `MoyaProvider`.
 public protocol Target {
@@ -15,24 +17,16 @@ public protocol Target {
     var path: String { get }
 
     /// The HTTP method used in the request.
-    var method: Method { get }
+    var method: HTTPMethod { get }
 
     /// Incapsulates the parameters and instructions how to attach them (via query, body, etc.)
 	var payload: Payload { get }
-
-    /// The type of validation to perform on the request. Default is `.none`.
-    var validationType: ValidationType { get }
 
     /// The headers to be used in the request.
     var headers: Headers? { get set }
 	
 	/// The parsing closure. Has default implementations for `()` and `Decodable` response types.
 	var parse: Parser { get }
-}
-
-public extension Target {
-
-    var validationType: ValidationType { .none }	
 }
 
 public extension Target where Response: Decodable {
