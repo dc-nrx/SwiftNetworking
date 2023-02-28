@@ -8,7 +8,7 @@ public enum HTTPMethod: String {
 public protocol Target {
 
 	associatedtype Response = ()
-	typealias Parser = (Data) throws -> Response
+	typealias ParserFunction = (Data) throws -> Response
 	
     /// The target's base `URL`.
     var baseURL: URL { get }
@@ -26,31 +26,48 @@ public protocol Target {
     var headers: Headers? { get set }
 	
 	/// The parsing closure. Has default implementations for `()` and `Decodable` response types.
-	var parse: Parser { get }
+	var parse: ParserFunction { get }
 }
 
 public extension Target where Response: Decodable {
 	
-	var parse: Parser { { try JSONDecoder().decode(Response.self, from: $0) } }
+	var parse: ParserFunction { { try JSONDecoder().decode(Response.self, from: $0) } }
 }
 
 public extension Target where Response == () {
 
-	var parse: Parser { { _ in () } }
+	var parse: ParserFunction { { _ in () } }
 }
 
 /// Sugar
 public extension Target {
 	
+	/**
+	 The full URL (base + path)
+	 */
 	var url: URL {
 		URL(string: baseURL.absoluteString + "/" + path)!
 	}
 	
 	var query: Query? {
 		switch payload {
+
 		case .query(let query),
-				.composite(_, let query):
+			 .composite(_, let query):
 			return query
+		
+		default:
+			return nil
+		}
+	}
+	
+	var body: Data? {
+		switch payload {
+
+		case .data(let data),
+			 .composite(let data, _):
+			return data
+		
 		default:
 			return nil
 		}
