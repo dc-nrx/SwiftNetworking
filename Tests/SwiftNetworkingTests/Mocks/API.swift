@@ -13,7 +13,7 @@ public protocol MtgAPI {
 	func types() throws -> Target<TypesResponse>
 }
 
-public final class MtgApiImpl: NetworkService, HeadersProvider {
+public final class MtgApiImpl: Host, HeadersProvider {
 	
 	private let host = "https://api.magicthegathering.io"
 	private let apiVer = "v1"

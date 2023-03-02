@@ -1,6 +1,6 @@
 import Foundation
 
-public typealias Query = [String: String]
+public typealias Query = [String: CustomStringConvertible]
 
 /// Represents HTTP request payload, except for headers (various types of body, query or their combination)
 public enum Payload {

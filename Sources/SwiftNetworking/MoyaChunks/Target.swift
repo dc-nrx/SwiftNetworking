@@ -10,9 +10,6 @@ public protocol Target {
 	associatedtype Response = ()
 	typealias ParserFunction = (Data) throws -> Response
 	
-    /// The target's base `URL`.
-    var baseURL: URL { get }
-
     /// The path to be appended to `baseURL` to form the full `URL`.
     var path: String { get }
 
@@ -41,13 +38,6 @@ public extension Target where Response == () {
 
 /// Sugar
 public extension Target {
-	
-	/**
-	 The full URL (base + path)
-	 */
-	var url: URL {
-		URL(string: baseURL.absoluteString + "/" + path)!
-	}
 	
 	var query: Query? {
 		switch payload {

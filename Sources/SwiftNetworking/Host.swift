@@ -24,17 +24,19 @@ public protocol AuthorizationHandler {
 /**
  The main protocol for sending requests / parsing responses. Has default implementation that handles request signing (and subsequent request re-sending if appropriate).
  */
-public protocol NetworkService {
+public protocol Host {
 
 	var requestPreprocessor: RequestPreprocessor? { get }
 	var authorizationHandler: AuthorizationHandler? { get }
 
+	var baseURLString: String { get }
+	
 	func request<T: Target> (
 		_ target: T
 	) async throws -> T.Response
 }
 
-public extension NetworkService {
+public extension Host {
 
 	/**
 	 Default implementation (assumes no additional headers like Authorization stuff). If additional headers needed,
@@ -48,7 +50,7 @@ public extension NetworkService {
 		
 }
 
-private extension NetworkService {
+private extension Host {
 	
 	/**
 	 The default implementation takes care of request preprocessing and handles token expiration case.
@@ -61,7 +63,7 @@ private extension NetworkService {
 		// Sign the request
 		var signedTarget = target
 		requestPreprocessor?.preprocess(&signedTarget)
-		let urlRequest = URLRequest(signedTarget)
+		let urlRequest = URLRequest(host: baseURLString, signedTarget)
 		// Send it
 		do {
 			let (data, _) = try await session.data(for: urlRequest)
