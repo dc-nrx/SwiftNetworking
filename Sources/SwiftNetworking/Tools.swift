@@ -15,7 +15,14 @@ public extension URLRequest {
 		host: String,
 		_ target: T
 	) {
-		let url = URL(string: host + "/" + target.path)!
+		var hostNormalized = host
+		if host.last == "/" && target.path.first == "/" {
+			hostNormalized.removeLast()
+		} else if host.last != "/" && target.path.first != "/" {
+			hostNormalized += "/"
+		}
+		
+		let url = URL(string: hostNormalized + target.path)!
 		var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)!
 		urlComponents.queryItems = target.query?.map { URLQueryItem(name: $0, value: "\($1)") }
 		urlComponents.percentEncodedQuery = urlComponents.percentEncodedQuery?.replacingOccurrences(of: "+", with: "%2B")
