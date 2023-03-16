@@ -19,4 +19,5 @@ public enum Payload {
 
     /// A body set with data, combined with url parameters.
     case composite(body: Data, query: Query)
+		
 }

@@ -28,6 +28,11 @@ public extension URLRequest {
 		urlComponents.percentEncodedQuery = urlComponents.percentEncodedQuery?.replacingOccurrences(of: "+", with: "%2B")
 		
 		self.init(url: urlComponents.url!)
+		
+		var headers = target.headers ?? [:]
+		if target.body != nil {
+			headers["Content-Type"] = "application/json"
+		}
 		self.allHTTPHeaderFields = target.headers
 		self.httpMethod = target.method.rawValue
 		self.httpBody = target.body

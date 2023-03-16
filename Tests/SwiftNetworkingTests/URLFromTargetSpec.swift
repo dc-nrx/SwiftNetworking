@@ -1,6 +1,6 @@
 //
 //  URLFromTargetSpec.swift
-//  
+//
 //
 //  Created by Dmytro Chapovskyi on 03.03.2023.
 //
@@ -14,14 +14,8 @@ final class URLFromTargetSpec: XCTestCase {
 	let sampleHost = "http://sample.host"
 	let sampleTarget = DummyTarget()
 	
-	override func setUpWithError() throws {
-		
-	}
-
-	override func tearDownWithError() throws {
-		
-	}
-
+	// MARK: - Slash between host and target
+	
 	func testHostWithTrailingSlash_correctResult() {
 		let request = URLRequest(host: sampleHost + "/", sampleTarget)
 		validate(request: request)
@@ -40,8 +34,32 @@ final class URLFromTargetSpec: XCTestCase {
 		let request = URLRequest(host: sampleHost + "/", target)
 		validate(request: request)
 	}
+
+	// MARK: - Query
 	
-	private func validate(request: URLRequest) {
+	func testQueryItems_StringValues() {
+		
+	}
+	
+	func testQueryItems_IntValues() {
+		
+	}
+	
+	func testQueryItems_FloatValues() {
+		
+	}
+	
+	func testQueryItems_BoolValues() {
+		
+	}
+	
+}
+
+// MARK: - Private
+@available(iOS 16.0, *)
+private extension URLFromTargetSpec {
+	
+	func validate(request: URLRequest) {
 		let url = request.url!
 		XCTAssertEqual(url.absoluteString.ranges(of: "//").count, 1)
 	}
