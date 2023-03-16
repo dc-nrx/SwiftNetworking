@@ -33,7 +33,7 @@ public extension URLRequest {
 		if target.body != nil {
 			headers["Content-Type"] = "application/json"
 		}
-		self.allHTTPHeaderFields = target.headers
+		self.allHTTPHeaderFields = headers
 		self.httpMethod = target.method.rawValue
 		self.httpBody = target.body
 	}
