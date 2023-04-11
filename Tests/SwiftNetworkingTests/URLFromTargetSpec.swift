@@ -11,27 +11,27 @@ import XCTest
 @available(iOS 16.0, *)
 final class URLFromTargetSpec: XCTestCase {
 
-	let sampleHost = "http://sample.host"
+	let sampleHostName = "http://sample.host"
 	let sampleTarget = DummyTarget()
 	
 	// MARK: - Slash between host and target
 	
 	func testHostWithTrailingSlash_correctResult() {
-		let request = URLRequest(host: sampleHost + "/", sampleTarget)
+		let request = URLRequest(host: sampleHostName + "/", sampleTarget)
 		validate(request: request)
 	}
 	
 	func testTargetWithPrefixSlash_correctResult() {
 		var target = sampleTarget
 		target.path = "/sample/path"
-		let request = URLRequest(host: sampleHost, target)
+		let request = URLRequest(host: sampleHostName, target)
 		validate(request: request)
 	}
 	
 	func testTargetWithPrefixSlash_HostWithTrailingSlash_correctResult() {
 		var target = sampleTarget
 		target.path = "/sample/path"
-		let request = URLRequest(host: sampleHost + "/", target)
+		let request = URLRequest(host: sampleHostName + "/", target)
 		validate(request: request)
 	}
 

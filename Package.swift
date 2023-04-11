@@ -30,6 +30,8 @@ let package = Package(
 		),
         .testTarget(
             name: "SwiftNetworkingTests",
-            dependencies: ["SwiftNetworking", "SwiftNetworkingMocks"]),
+            dependencies: ["SwiftNetworking", "SwiftNetworkingMocks"],
+			resources: [.process("MockedResponses")]
+		),
     ]
 )
