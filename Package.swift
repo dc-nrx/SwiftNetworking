@@ -11,6 +11,9 @@ let package = Package(
         .library(
             name: "SwiftNetworking",
             targets: ["SwiftNetworking"]),
+		.library(
+			name: "SwiftNetworkingMocks",
+			targets: ["SwiftNetworkingMocks"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -21,8 +24,12 @@ let package = Package(
         .target(
             name: "SwiftNetworking"
 		),
+		.target(
+			name: "SwiftNetworkingMocks",
+			dependencies: ["SwiftNetworking"]
+		),
         .testTarget(
             name: "SwiftNetworkingTests",
-            dependencies: ["SwiftNetworking"]),
+            dependencies: ["SwiftNetworking", "SwiftNetworkingMocks"]),
     ]
 )
