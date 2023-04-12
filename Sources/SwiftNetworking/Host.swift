@@ -43,6 +43,15 @@ public protocol RequestPreprocessor: AnyObject {
  */
 public protocol AuthorizationHandler {
 
+	//TODO: Provide tools to resolve arbitrary issues (not only token expired case)
+	
+	/**
+	 Refresh the token. (or do any other work that may fix the networking issues)
+	 */
 	func performTokenRefresh() async throws
+	
+	/**
+	 Depending on the `error` nature, make the decision whether the token refresh might help.
+	 */
 	func tokenRefreshRequired(error: Error?) -> Bool
 }

@@ -27,47 +27,58 @@ open class RegularHost: Host {
 	}
 	
 	/**
-	 The default implementation takes care of request preprocessing and handles token expiration case.
+	 Send the request.
+	 
+	 If `requestPreprocessor != nil`, call `requestPreprocessor.preprocess` on the target request first.
+	 If the request fails and `authorizationHandler != nil`, try to refresh token and re-send the request once again.
+	 
+	 Please see `RequestPreprocessor` and `AuthorizationHandler` docs for additional details.
 	 */
 	open func request<T: Target> (
 		_ target: T
 	) async throws -> T.Response {
-		try await _recursive_request(target)
+		try await recursiveRequest(target, isInitialRequest: true)
 	}
-		
 }
 
 private extension RegularHost {
 	
-	/**
-	 The default implementation takes care of request preprocessing and handles token expiration case.
-	 */
-	func _recursive_request<T: Target> (
+	//TODO: instead of `isInitialRequest` provide errors array; stop as soon as some error happens the 2nd time
+	func recursiveRequest<T: Target> (
 		_ target: T,
-		repeatedRequest: Bool = false
+		isInitialRequest: Bool
 	) async throws -> T.Response {
-		// Sign the request
-		var signedTarget = target
-		requestPreprocessor?.preprocess(&signedTarget)
-		
-		let urlRequest = URLRequest(host: baseURLString, signedTarget)
-		// Send it
+		let urlRequest = preprocessedUrlRequest(from: target)
 		do {
 			let (data, _) = try await session.data(for: urlRequest)
-			return try signedTarget.parse(data)
-		// Try to refresh token and repeat the process if it's the first attempt (and if appropriate).
+			return try target.parse(data)
 		} catch {
-			// Check conditions
-			if !repeatedRequest,
-				authorizationHandler?.tokenRefreshRequired(error: error) == true {
-				// Refresh token
-				try await authorizationHandler?.performTokenRefresh()
-				// Recursive call
-				return try await _recursive_request(target, repeatedRequest: true)
+			if !isInitialRequest {
+				return try await attemptResendWithRefreshedToken(target, initialError: error)
 			} else {
 				throw error
 			}
 		}
+	}
+	
+	func attemptResendWithRefreshedToken<T: Target>(
+		_ target: T,
+		initialError: Error
+	) async throws -> T.Response {
+		if authorizationHandler?.tokenRefreshRequired(error: initialError) == true {
+			try await authorizationHandler?.performTokenRefresh()
+			return try await recursiveRequest(target, isInitialRequest: false)
+		} else {
+			throw initialError
+		}
+	}
+	
+	func preprocessedUrlRequest<T: Target>(
+		from target: T
+	) -> URLRequest {
+		var signedTarget = target
+		requestPreprocessor?.preprocess(&signedTarget)
+		return URLRequest(host: baseURLString, signedTarget)
 	}
 
 }
