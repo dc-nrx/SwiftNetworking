@@ -68,12 +68,17 @@ private extension URLFromTargetSpec {
 struct DummyTarget: Target {
 
 	var path = "sample/path"
-	
 	var method = HTTPMethod.GET
-	
 	var payload: Payload = .none
-	
 	var headers: Headers? = nil
-	
-	
+}
+
+struct DataTarget: Target {
+
+	typealias Response = Data
+	var path = "sample/path"
+	var method = HTTPMethod.GET
+	var payload: Payload = .none
+	var headers: Headers? = nil
+	var parse: (Data) throws -> Response = { $0 }
 }

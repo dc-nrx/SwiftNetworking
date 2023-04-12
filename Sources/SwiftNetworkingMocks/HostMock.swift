@@ -8,17 +8,17 @@
 import Foundation
 import SwiftNetworking
 
-public enum ApiHostMockError: Error {
+public enum HostMockError: Error {
 	case noMockedDataForTarget(any Target)
 }
 
-public class ApiHostMock: SwiftNetworking.Host {
+public class HostMock: SwiftNetworking.Host {
 	
 	public var requestPreprocessor: RequestPreprocessor?
 	public var authorizationHandler: AuthorizationHandler?
 	public var baseURLString: String
 
-	public var mockedResponses = [String: Data]()	
+	public var mockedResponses = [String: Data]()
 	
 	public init(
 		mockedResponses: [String: Data] = [String: Data](),
@@ -30,10 +30,10 @@ public class ApiHostMock: SwiftNetworking.Host {
 		self.authorizationHandler = authorizationHandler
 		self.baseURLString = baseURLString
 	}
-	
+
 	public func request<T>(_ target: T) async throws -> T.Response where T : Target {
 		guard let data = mockedResponses[target.path] else {
-			throw ApiHostMockError.noMockedDataForTarget(target)
+			throw HostMockError.noMockedDataForTarget(target)
 		}
 		return try target.parse(data)
 	}
