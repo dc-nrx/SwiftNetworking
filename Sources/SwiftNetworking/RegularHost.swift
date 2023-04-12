@@ -35,9 +35,9 @@ open class RegularHost: Host {
 	 Send the request.
 	 
 	 If `requestPreprocessor != nil`, call `requestPreprocessor.preprocess` on the target request first.
-	 If the request fails and `authorizationHandler != nil`, try to refresh token and re-send the request once again.
+	 If the request fails and `errorHandler != nil`, attempt to recover from it and re-send the request once again.
 	 
-	 Please see `RequestPreprocessor` and `AuthorizationHandler` docs for additional details.
+	 Please see `RequestPreprocessor` and `ErrorHandler` docs for additional details.
 	 */
 	open func request<T: Target> (
 		_ target: T
@@ -58,27 +58,12 @@ private extension RegularHost {
 			return try target.parse(data)
 		} catch {
 			let extendedErrors = previousErrors.appending(error)
-			if shouldAttemptRecovery(from: extendedErrors) {
-				return try await attemptRecovery(target, errors: extendedErrors)
+			if !previousErrors.contains(where: { $0 == error }) {
+				try await errorHandler?.handle(error: error)
+				return try await recursiveRequest(target, previousErrors: extendedErrors)
 			} else {
 				throw previousErrors.isEmpty ? error : RegularHostError.recoveryFromResponseErrorsFailed(extendedErrors)
 			}
-		}
-	}
-	
-	func attemptRecovery<T: Target>(
-		_ target: T,
-		errors: [Error]
-	) async throws -> T.Response {
-		guard let errorToHandle = errors.last else {
-			throw RegularHostError.attemptToRecoverWithEmptyErrorsList
-		}
-		
-		if errorHandler?.canHandle(error: errorToHandle) == true {
-			try await errorHandler?.handle(error: errorToHandle)
-			return try await recursiveRequest(target, previousErrors: errors)
-		} else {
-			throw RegularHostError.recoveryFromResponseErrorsFailed(errors)
 		}
 	}
 	
@@ -90,17 +75,4 @@ private extension RegularHost {
 		return URLRequest(host: baseURLString, signedTarget)
 	}
 
-	func shouldAttemptRecovery(
-		from errors: [Error]
-	) -> Bool {
-		guard let lastError = errors.last,
-			  errorHandler?.canHandle(error: lastError) == true else {
-			return false
-		}
-		
-		// Comparing descriptions can't give false negative result,
-		// which is the only thing that matters here
-		// (since may lead to an infinite recursion)
-		return !errors.dropLast().contains { "\($0)" == "\(lastError)" }
-	}
 }
