@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import SwiftNetworking
 import SwiftNetworkingMocks
 
 final class MockedResponseTests: XCTestCase {
@@ -22,7 +23,7 @@ final class MockedResponseTests: XCTestCase {
 		let path = "/sample"
 		sut.mockedResponses[path] = try Data(jsonName: "Iphone9Info", bundle: .module)
 		let target = DataTarget(path: path)
-		let data: Data = try await sut.request(target)
+		let data: Data = try await sut.send(target)
 		XCTAssertNotNil(data)
 	}
 	
@@ -31,7 +32,7 @@ final class MockedResponseTests: XCTestCase {
 		let target = DataTarget(path: "path")
 		let expectation = expectation(description: "expect call to throw error")
 		do {
-			let _ = try await sut.request(target)
+			let _ = try await sut.send(target)
 		} catch {
 			if case HostMockError.noMockedDataForTarget(let errTarget) = error {
 				expectation.fulfill()

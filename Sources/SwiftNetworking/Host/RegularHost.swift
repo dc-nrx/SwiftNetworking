@@ -39,7 +39,7 @@ open class RegularHost: Host {
 	 
 	 Please see `RequestPreprocessor` and `ErrorHandler` docs for additional details.
 	 */
-	open func request<T: Target> (
+	open func send<T: Target> (
 		_ target: T
 	) async throws -> T.Response {
 		try await recursiveRequest(target)
@@ -55,7 +55,7 @@ private extension RegularHost {
 		let urlRequest = preprocessedUrlRequest(from: target)
 		do {
 			let (data, _) = try await session.data(for: urlRequest)
-			return try target.parse(data)
+			return try target.decode(data)
 		} catch {
 			let extendedErrors = previousErrors.appending(error)
 			if !previousErrors.contains(where: { $0 == error }) {

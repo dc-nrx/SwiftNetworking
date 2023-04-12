@@ -17,7 +17,7 @@ public protocol Host {
 	var session: URLSession { get }
 	var baseURLString: String { get }
 	
-	func request<T: Target> (
+	func send<T: Target> (
 		_ target: T
 	) async throws -> T.Response
 }

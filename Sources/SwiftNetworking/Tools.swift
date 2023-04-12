@@ -7,8 +7,6 @@
 
 import Foundation
 
-public typealias Headers = [String: String]
-
 extension URLRequest {
 	
 	init<T: Target>(

@@ -31,10 +31,10 @@ public class HostMock: SwiftNetworking.Host {
 		self.baseURLString = baseURLString
 	}
 
-	public func request<T>(_ target: T) async throws -> T.Response where T : Target {
+	public func send<T>(_ target: T) async throws -> T.Response where T : Target {
 		guard let data = mockedResponses[target.path] else {
 			throw HostMockError.noMockedDataForTarget(target)
 		}
-		return try target.parse(data)
+		return try target.decode(data)
 	}
 }
