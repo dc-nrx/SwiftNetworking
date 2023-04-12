@@ -13,7 +13,7 @@ import Foundation
 public protocol Host {
 
 	var requestPreprocessor: RequestPreprocessor? { get }
-	var authorizationHandler: AuthorizationHandler? { get }
+	var errorHandler: ErrorHandler? { get }
 	var session: URLSession { get }
 	var baseURLString: String { get }
 	
@@ -25,7 +25,7 @@ public protocol Host {
 public extension Host {
 
 	var requestPreprocessor: RequestPreprocessor? { nil }
-	var authorizationHandler: AuthorizationHandler? { nil }
+	var errorHandler: ErrorHandler? { nil }
 	var session: URLSession { .shared }
 
 }
@@ -41,17 +41,17 @@ public protocol RequestPreprocessor: AnyObject {
 /**
  Can be used to handle "token expired" errors in-place.
  */
-public protocol AuthorizationHandler {
+public protocol ErrorHandler {
 
 	//TODO: Provide tools to resolve arbitrary issues (not only token expired case)
 	
 	/**
 	 Refresh the token. (or do any other work that may fix the networking issues)
 	 */
-	func performTokenRefresh() async throws
+	func handle(error: Error) async throws
 	
 	/**
 	 Depending on the `error` nature, make the decision whether the token refresh might help.
 	 */
-	func tokenRefreshRequired(error: Error?) -> Bool
+	func canHandle(error: Error) -> Bool
 }

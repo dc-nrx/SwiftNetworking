@@ -15,7 +15,7 @@ public enum HostMockError: Error {
 public class HostMock: SwiftNetworking.Host {
 	
 	public var requestPreprocessor: RequestPreprocessor?
-	public var authorizationHandler: AuthorizationHandler?
+	public var errorHandler: ErrorHandler?
 	public var baseURLString: String
 
 	public var mockedResponses = [String: Data]()
@@ -23,11 +23,11 @@ public class HostMock: SwiftNetworking.Host {
 	public init(
 		mockedResponses: [String: Data] = [String: Data](),
 		requestPreprocessor: RequestPreprocessor? = nil,
-		authorizationHandler: AuthorizationHandler? = nil,
+		authorizationHandler: ErrorHandler? = nil,
 		baseURLString: String = "__MOCK__//"
 	) {
 		self.requestPreprocessor = requestPreprocessor
-		self.authorizationHandler = authorizationHandler
+		self.errorHandler = authorizationHandler
 		self.baseURLString = baseURLString
 	}
 

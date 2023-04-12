@@ -28,18 +28,18 @@ open class RequestPreprocessorMock: RequestPreprocessor {
 	}
 }
 
-open class AuthorizationHandlerMock: AuthorizationHandler {
+open class AuthorizationHandlerMock: ErrorHandler {
 	
 	open var refreshTokenRequiredMock = false
 	open var tokenRefreshCount = 0
 	
 	public init() { }
 	
-	open func performTokenRefresh() async throws {
+	open func handle(error: Error) async throws {
 		tokenRefreshCount += 1
 	}
 	
-	open func tokenRefreshRequired(error: Error?) -> Bool {
+	open func canHandle(error: Error) -> Bool {
 		refreshTokenRequiredMock
 	}
 	
