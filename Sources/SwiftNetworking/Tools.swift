@@ -9,7 +9,7 @@ import Foundation
 
 public typealias Headers = [String: String]
 
-public extension URLRequest {
+extension URLRequest {
 	
 	init<T: Target>(
 		host: String,
@@ -36,5 +36,14 @@ public extension URLRequest {
 		self.allHTTPHeaderFields = headers
 		self.httpMethod = target.method.rawValue
 		self.httpBody = target.body
+	}
+}
+
+extension Array {
+	
+	func appending(_ newElement: Element) -> Self {
+		var result = self
+		result.append(newElement)
+		return result
 	}
 }

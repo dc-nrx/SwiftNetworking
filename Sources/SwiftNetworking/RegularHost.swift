@@ -48,7 +48,6 @@ open class RegularHost: Host {
 
 private extension RegularHost {
 	
-	//TODO: instead of `isInitialRequest` provide errors array; stop as soon as some error happens the 2nd time
 	func recursiveRequest<T: Target> (
 		_ target: T,
 		previousErrors: [Error] = []
@@ -58,17 +57,11 @@ private extension RegularHost {
 			let (data, _) = try await session.data(for: urlRequest)
 			return try target.parse(data)
 		} catch {
-			var errors = previousErrors
-			errors.append(error)
-			if shouldAttemptRecovery(from: errors) {
-				return try await attemptRecovery(target, errors: errors)
+			let extendedErrors = previousErrors.appending(error)
+			if shouldAttemptRecovery(from: extendedErrors) {
+				return try await attemptRecovery(target, errors: extendedErrors)
 			} else {
-				if errors.isEmpty {
-					errors.append(error)
-					throw RegularHostError.recoveryFromResponseErrorsFailed(errors)
-				} else {
-					throw error
-				}
+				throw previousErrors.isEmpty ? error : RegularHostError.recoveryFromResponseErrorsFailed(extendedErrors)
 			}
 		}
 	}
@@ -105,30 +98,9 @@ private extension RegularHost {
 			return false
 		}
 		
-		if errors.isEmpty {
-			return true
-		} else {
-			for err in errors {
-				if err == lastError {
-					return false
-				}
-			}
-			return true
-		}
-	}
-}
-
-// MARK: - Approximate error equatable conformance
-
-private func == (lhs: Error, rhs: Error) -> Bool {
-	guard type(of: lhs) == type(of: rhs) else { return false }
-	let error1 = lhs as NSError
-	let error2 = rhs as NSError
-	return error1.domain == error2.domain && error1.code == error2.code && "\(lhs)" == "\(rhs)"
-}
-
-private extension Equatable where Self : Error {
-	static func == (lhs: Self, rhs: Self) -> Bool {
-		lhs as Error == rhs as Error
+		// Comparing descriptions can't give false negative result,
+		// which is the only thing that matters here
+		// (since may lead to an infinite recursion)
+		return !errors.dropLast().contains { "\($0)" == "\(lastError)" }
 	}
 }

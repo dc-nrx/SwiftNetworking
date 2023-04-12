@@ -43,15 +43,13 @@ public protocol RequestPreprocessor: AnyObject {
  */
 public protocol ErrorHandler {
 
-	//TODO: Provide tools to resolve arbitrary issues (not only token expired case)
-	
 	/**
-	 Refresh the token. (or do any other work that may fix the networking issues)
+	 Try to handle the error (i.e. refresh token for token expired / unauthorized case)
 	 */
 	func handle(error: Error) async throws
 	
 	/**
-	 Depending on the `error` nature, make the decision whether the token refresh might help.
+	 Depending on the `error` nature, make the decision whether there is a way to fix it and re-send the request once again.
 	 */
 	func canHandle(error: Error) -> Bool
 }
