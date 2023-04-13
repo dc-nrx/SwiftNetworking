@@ -10,25 +10,29 @@ import SwiftNetworking
 
 open class RequestPreprocessorMock: RequestPreprocessor {
 	
-	public var tokenValue: String
+	public var authorizationValue: String
 	
 	public var authorizationKey = "Authorization"
-	public var tokenRefreshedCountString = "0"
 	
 	public init(
-		tokenValue: String = "--Token Placeholder--"
+		authorizationValue: String = "Bearer --Token Placeholder--"
 	) {
-		self.tokenValue = tokenValue
+		self.authorizationValue = authorizationValue
 	}
 	
-	public func preprocess(_ target: inout some Target) {
+	public func preprocess(
+		_ target: inout some Target,
+		rewriteExistedData: Bool = false
+	) {
 		var headers = target.headers ?? [:]
-		headers[authorizationKey] = "Bearer " + tokenValue
+		if rewriteExistedData || headers[authorizationKey] == nil {
+			headers[authorizationKey] = authorizationValue
+		}
 		target.headers = headers
 	}
 }
 
-open class AuthorizationHandlerMock: ErrorHandler {
+open class ErrorHandlerMock: ErrorHandler {
 	
 	open var refreshTokenRequiredMock = false
 	open var tokenRefreshCount = 0

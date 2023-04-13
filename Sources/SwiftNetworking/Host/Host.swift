@@ -35,7 +35,19 @@ public extension Host {
  */
 public protocol RequestPreprocessor: AnyObject {
 	
-	func preprocess(_ target: inout some Target)
+	func preprocess(
+		_ target: inout some Target,
+		rewriteExistedData: Bool
+	)
+}
+
+public extension RequestPreprocessor {
+	
+	func preprocess(
+		_ target: inout some Target
+	) {
+		preprocess(&target, rewriteExistedData: false)
+	}
 }
 
 /**

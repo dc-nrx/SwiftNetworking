@@ -14,35 +14,40 @@ public enum HostMockError: Error {
 
 public class HostMock: SwiftNetworking.Host {
 	
-	public var requestPreprocessor: RequestPreprocessor?
-	public var errorHandler: ErrorHandler?
 	public var baseURLString: String
-
-	private var mockedResponses = [String: ResponseMock]()
 	
+	/**
+	 The default response mock. Being used for all requests not specified by `mock(_ response:, for target:)` method.
+	 */
+	public var defaultResponseMock: ResponseMock?
+	
+	private var mockedResponses = [String: ResponseMock]()
+
 	public init(
 		mockedResponses: [String: Data] = [String: Data](),
-		requestPreprocessor: RequestPreprocessor? = nil,
-		authorizationHandler: ErrorHandler? = nil,
-		baseURLString: String = "__MOCK__//"
+		baseURLString: String = "__MOCK__//",
+		defaultResponseMock: ResponseMock? = ResponseMock()
 	) {
-		self.requestPreprocessor = requestPreprocessor
-		self.errorHandler = authorizationHandler
 		self.baseURLString = baseURLString
 	}
 
 	public func send<T>(_ target: T) async throws -> T.Response where T : Target {
-		guard let response = mockedResponses[key(for: target)] else {
+		let mockedResponse: ResponseMock
+		if let specificResponse = mockedResponses[key(for: target)] {
+			mockedResponse = specificResponse
+		} else if let defaultResponseMock = defaultResponseMock {
+			mockedResponse = defaultResponseMock
+		} else {
 			throw HostMockError.noMockedDataForTarget(target)
 		}
 		
-		if let error = response.error {
+		if let error = mockedResponse.error {
 			throw error
 		} else {
-			return try target.decode(response.body)
+			return try target.decode(mockedResponse.body)
 		}
 	}
-	
+		
 	public func mock(_ response: ResponseMock, for target: any Target) {
 		mockedResponses[key(for: target)] = response
 	}

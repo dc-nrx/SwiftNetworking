@@ -7,34 +7,44 @@
 
 import XCTest
 import SwiftNetworkingMocks
+import SwiftNetworking
 
 final class RequestPreprocessorMockTests: XCTestCase {
-
-	var hostMock: HostMock!
+	
+	let sampleAuthValue = "test auth"
 	var sut: RequestPreprocessorMock!
 	
-    override func setUpWithError() throws {
-        sut = RequestPreprocessorMock()
-		hostMock = HostMock()
+	override func setUp() async throws {
+		sut = RequestPreprocessorMock(authorizationValue: sampleAuthValue)
+	}
+	
+	override func tearDown() async throws {
+		sut = nil
+	}
+	
+    func testTargetWithNilHeaders_authHeaderAdded() throws {
+		var target = DataTarget(path: "xxx")
+		sut.preprocess(&target)
+		XCTAssertEqual(target.headers?[sut.authorizationKey], sampleAuthValue)
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
+	func testTargetWithEmptyNonNilHeaders_authHeaderAdded() throws {
+		var target = DataTarget(path: "xxx", headers: [:])
+		sut.preprocess(&target)
+		XCTAssertEqual(target.headers?[sut.authorizationKey], sampleAuthValue)
+	}
+	
+	func testTargetWithPrefilledAuthValue_rewriteFalse_authValueNotRewritten() throws {
+		let customAuthValue = "custom auth value"
+		var target = DataTarget(path: "xxx", headers: [sut.authorizationKey: customAuthValue])
+		sut.preprocess(&target,rewriteExistedData: false)
+		XCTAssertEqual(target.headers?[sut.authorizationKey], customAuthValue)
+	}
+	
+	func testTargetWithPrefilledAuthValue_rewriteTrue_authValueRewritten() throws {
+		let customAuthValue = "custom auth value"
+		var target = DataTarget(path: "xxx", headers: [sut.authorizationKey: customAuthValue])
+		sut.preprocess(&target, rewriteExistedData: true)
+		XCTAssertEqual(target.headers?[sut.authorizationKey], sampleAuthValue)
+	}
 }

@@ -9,8 +9,8 @@ import Foundation
 
 public struct ResponseMock {
 
-	var body: Data
-	var error: Error?
+	public var body: Data
+	public var error: Error?
 
 	public init(
 		_ body: Data = Data(),
@@ -20,3 +20,4 @@ public struct ResponseMock {
 		self.body = body
 	}
 }
+
