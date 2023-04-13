@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Dmytro Chapovskyi on 12.04.2023.
 //
@@ -8,7 +8,7 @@
 import Foundation
 
 public struct DataTarget: Target {
-
+		
 	public typealias Response = Data
 
 	public var path: String

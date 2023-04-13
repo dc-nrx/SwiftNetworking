@@ -1,6 +1,8 @@
 import Foundation
 
-public typealias Query = [String: CustomStringConvertible]
+public typealias QueryItem = CustomStringConvertible
+
+public typealias Query = [String: QueryItem]
 
 public typealias Headers = [String: String]
 
@@ -9,7 +11,7 @@ public enum HTTPMethod: String {
 }
 
 /// The protocol used to define the specifications necessary for a `MoyaProvider`.
-public protocol Target {
+public protocol Target: CustomStringConvertible, CustomDebugStringConvertible {
 
 	associatedtype Response = ()
 	typealias DecoderFunction = (Data) throws -> Response
@@ -24,4 +26,32 @@ public protocol Target {
 	
 	/// The parsing closure. Has default implementations for `()` and `Decodable` response types.
 	var decode: DecoderFunction { get }
+}
+
+public extension Target {
+	
+	var description: String {
+		var queryString = ""
+		if let query = query {
+			for (key, value) in query {
+				queryString += key + "=" + value.description
+			}
+		}
+		
+		var bodySuffixString = ""
+		if let body = body {
+			bodySuffixString = " ## bodyHash = \(body.hashValue)"
+		}
+		
+		var headersNewLine = ""
+		if let headers = headers {
+			headersNewLine = " ↓\nHeaders = \(headers)"
+		}
+		
+		return method.rawValue + " " + path + "?" + queryString + bodySuffixString + headersNewLine
+	}
+	
+	var debugDescription: String {
+		return description
+	}
 }

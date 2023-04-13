@@ -21,10 +21,11 @@ final class MockedResponseTests: XCTestCase {
 	func testHostMock_returnsIphone9Info() async throws {
 		let sut = HostMock()
 		let path = "/sample"
-		sut.mockedResponses[path] = try Data(jsonName: "Iphone9Info", bundle: .module)
 		let target = DataTarget(path: path)
+		let response = ResponseMock(try Data(jsonName: "Iphone9Info", bundle: .module))
+		sut.mock(response, for: target)
 		let data: Data = try await sut.send(target)
-		XCTAssertNotNil(data)
+		XCTAssertTrue(!data.isEmpty)
 	}
 	
 	func testHostMock_noMockedData_throwsError() async throws {
@@ -34,11 +35,11 @@ final class MockedResponseTests: XCTestCase {
 		do {
 			let _ = try await sut.send(target)
 		} catch {
-			if case HostMockError.noMockedDataForTarget(let errTarget) = error {
+			if case HostMockError.noMockedDataForTarget(_) = error {
 				expectation.fulfill()
 			}
 		}
 		
-		wait(for: [expectation], timeout: 0.5)
+		await fulfillment(of: [expectation], timeout: 0.5)
 	}
 }

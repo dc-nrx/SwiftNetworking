@@ -18,7 +18,7 @@ public class HostMock: SwiftNetworking.Host {
 	public var errorHandler: ErrorHandler?
 	public var baseURLString: String
 
-	public var mockedResponses = [String: Data]()
+	private var mockedResponses = [String: ResponseMock]()
 	
 	public init(
 		mockedResponses: [String: Data] = [String: Data](),
@@ -32,9 +32,22 @@ public class HostMock: SwiftNetworking.Host {
 	}
 
 	public func send<T>(_ target: T) async throws -> T.Response where T : Target {
-		guard let data = mockedResponses[target.path] else {
+		guard let response = mockedResponses[key(for: target)] else {
 			throw HostMockError.noMockedDataForTarget(target)
 		}
-		return try target.decode(data)
+		
+		if let error = response.error {
+			throw error
+		} else {
+			return try target.decode(response.body)
+		}
+	}
+	
+	public func mock(_ response: ResponseMock, for target: any Target) {
+		mockedResponses[key(for: target)] = response
+	}
+	
+	private func key(for target: any Target) -> String {
+		target.description
 	}
 }

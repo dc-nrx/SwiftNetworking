@@ -10,20 +10,20 @@ import SwiftNetworking
 
 open class RequestPreprocessorMock: RequestPreprocessor {
 	
+	public var tokenValue: String
+	
 	public var authorizationKey = "Authorization"
 	public var tokenRefreshedCountString = "0"
-	public var authHandler: AuthorizationHandlerMock
 	
 	public init(
-		authHandler: AuthorizationHandlerMock
+		tokenValue: String = "--Token Placeholder--"
 	) {
-		self.authHandler = authHandler
+		self.tokenValue = tokenValue
 	}
 	
 	public func preprocess(_ target: inout some Target) {
 		var headers = target.headers ?? [:]
-		headers[authorizationKey] = "Bearer AZAZA"
-		headers[tokenRefreshedCountString] = "\(authHandler.tokenRefreshCount)"
+		headers[authorizationKey] = "Bearer " + tokenValue
 		target.headers = headers
 	}
 }
