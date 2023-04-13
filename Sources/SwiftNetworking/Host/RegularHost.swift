@@ -20,14 +20,14 @@ open class RegularHost: Host {
 	public var session: URLSession
 	
 	public init(
+		baseURLString: String,
 		requestPreprocessor: RequestPreprocessor? = nil,
 		errorHandler: ErrorHandler? = nil,
-		baseURLString: String,
 		session: URLSession = .shared
 	) {
+		self.baseURLString = baseURLString
 		self.requestPreprocessor = requestPreprocessor
 		self.errorHandler = errorHandler
-		self.baseURLString = baseURLString
 		self.session = session
 	}
 	
