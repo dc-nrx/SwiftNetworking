@@ -24,13 +24,13 @@ final class HostMockTests: XCTestCase {
 	func testReturnsDefaultMockResponse() async throws {
 		let responseMock = ResponseMock(Data([1,2,3]))
 		sut.defaultResponseMock = responseMock
-		let responseData = try await sut.send(DataTarget(path: "xxx"))
+		let responseData = try await sut.send(DataTarget("xxx"))
 		XCTAssertEqual(responseData, responseMock.body)
 	}
 	
 	func testReturnsSpecificMockResponse_defaultMockResponseNil() async throws {
 		let specificResponseMock = ResponseMock(Data([1,2,3]))
-		let target = DataTarget(path: "xxx")
+		let target = DataTarget("xxx")
 		sut.defaultResponseMock = nil
 		sut.mock(specificResponseMock, for: target)
 		let responseData = try await sut.send(target)
@@ -39,7 +39,7 @@ final class HostMockTests: XCTestCase {
 	
 	func testReturnsSpecificMockResponse_defaultMockResponseNotNil() async throws {
 		let specificResponseMock = ResponseMock(Data([1,2,3]))
-		let target = DataTarget(path: "xxx")
+		let target = DataTarget("xxx")
 		sut.mock(specificResponseMock, for: target)
 		sut.defaultResponseMock = ResponseMock(Data([7,7,7]))
 		let responseData = try await sut.send(target)
@@ -49,16 +49,16 @@ final class HostMockTests: XCTestCase {
 	func testSpecificMockSet_returnsDefaultReponseMock_forAnotherTarget() async throws {
 		let specificResponseMock = ResponseMock(Data([1,2,3]))
 		let defaultResponseMock = ResponseMock(Data([7,7,7]))
-		let target = DataTarget(path: "xxx")
+		let target = DataTarget("xxx")
 		sut.mock(specificResponseMock, for: target)
 		sut.defaultResponseMock = ResponseMock(Data([7,7,7]))
-		let anotherTarget = DataTarget(path: "zzz")
+		let anotherTarget = DataTarget("zzz")
 		let responseData = try await sut.send(anotherTarget)
 		XCTAssertEqual(responseData, defaultResponseMock.body)
 	}
 
 	func test3SpecificMocksSet_returnsCorrectValues_forCorrespondingTargets() async throws {
-		let pairs = (0...3).map { (target: DataTarget(path: "\($0)"), responseMock: ResponseMock(Data([$0]))) }
+		let pairs = (0...3).map { (target: DataTarget("\($0)"), responseMock: ResponseMock(Data([$0]))) }
 		for (target, response) in pairs {
 			sut.mock(response, for: target)
 		}

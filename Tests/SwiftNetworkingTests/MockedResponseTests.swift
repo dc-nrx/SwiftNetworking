@@ -21,7 +21,7 @@ final class MockedResponseTests: XCTestCase {
 	func testHostMock_returnsIphone9Info() async throws {
 		let sut = HostMock()
 		let path = "/sample"
-		let target = DataTarget(path: path)
+		let target = DataTarget(path)
 		let response = ResponseMock(try Data(jsonName: "Iphone9Info", bundle: .module))
 		sut.mock(response, for: target)
 		let data: Data = try await sut.send(target)
@@ -30,7 +30,7 @@ final class MockedResponseTests: XCTestCase {
 	
 	func testHostMock_noMockedData_throwsError() async throws {
 		let sut = HostMock()
-		let target = DataTarget(path: "path")
+		let target = DataTarget("path")
 		let expectation = expectation(description: "expect call to throw error")
 		do {
 			let _ = try await sut.send(target)

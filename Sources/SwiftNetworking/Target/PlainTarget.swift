@@ -20,7 +20,7 @@ public struct PlainTarget: Target {
 	public var decode: (Data) throws -> () = { _ in () }
 	
 	public init(
-		path: String,
+		_ path: String,
 		method: HTTPMethod = .GET,
 		query: Query? = nil,
 		body: Data? = nil,

@@ -23,27 +23,27 @@ final class RequestPreprocessorMockTests: XCTestCase {
 	}
 	
     func testTargetWithNilHeaders_authHeaderAdded() throws {
-		var target = DataTarget(path: "xxx")
+		var target = DataTarget("xxx")
 		sut.preprocess(&target)
 		XCTAssertEqual(target.headers?[sut.authorizationKey], sampleAuthValue)
     }
 
 	func testTargetWithEmptyNonNilHeaders_authHeaderAdded() throws {
-		var target = DataTarget(path: "xxx", headers: [:])
+		var target = DataTarget("xxx", headers: [:])
 		sut.preprocess(&target)
 		XCTAssertEqual(target.headers?[sut.authorizationKey], sampleAuthValue)
 	}
 	
 	func testTargetWithPrefilledAuthValue_rewriteFalse_authValueNotRewritten() throws {
 		let customAuthValue = "custom auth value"
-		var target = DataTarget(path: "xxx", headers: [sut.authorizationKey: customAuthValue])
+		var target = DataTarget("xxx", headers: [sut.authorizationKey: customAuthValue])
 		sut.preprocess(&target,rewriteExistedData: false)
 		XCTAssertEqual(target.headers?[sut.authorizationKey], customAuthValue)
 	}
 	
 	func testTargetWithPrefilledAuthValue_rewriteTrue_authValueRewritten() throws {
 		let customAuthValue = "custom auth value"
-		var target = DataTarget(path: "xxx", headers: [sut.authorizationKey: customAuthValue])
+		var target = DataTarget("xxx", headers: [sut.authorizationKey: customAuthValue])
 		sut.preprocess(&target, rewriteExistedData: true)
 		XCTAssertEqual(target.headers?[sut.authorizationKey], sampleAuthValue)
 	}

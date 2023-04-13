@@ -16,19 +16,19 @@ final class URLFromTargetSpec: XCTestCase {
 	// MARK: - Slash between host and target
 	
 	func testHostWithTrailingSlash_correctResult() {
-		let target = PlainTarget(path: "/sample/path")
+		let target = PlainTarget("/sample/path")
 		let request = URLRequest(host: sampleHostName + "/", target)
 		validate(request: request)
 	}
 	
 	func testTargetWithPrefixSlash_correctResult() {
-		let target = PlainTarget(path: "/sample/path")
+		let target = PlainTarget("/sample/path")
 		let request = URLRequest(host: sampleHostName, target)
 		validate(request: request)
 	}
 	
 	func testTargetWithPrefixSlash_HostWithTrailingSlash_correctResult() {
-		let target = PlainTarget(path: "/sample/path")
+		let target = PlainTarget("/sample/path")
 		let request = URLRequest(host: sampleHostName + "/", target)
 		validate(request: request)
 	}

@@ -20,7 +20,7 @@ public struct DataTarget: Target {
 	public var decode: (Data) throws -> Response = { $0 }
 	
 	public init(
-		path: String,
+		_ path: String,
 		method: HTTPMethod = .GET,
 		query: Query? = nil,
 		body: Data? = nil,
