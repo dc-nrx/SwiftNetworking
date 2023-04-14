@@ -27,7 +27,6 @@ public extension Host {
 	var requestPreprocessor: RequestPreprocessor? { nil }
 	var errorHandler: ErrorHandler? { nil }
 	var session: URLSession { .shared }
-
 }
 
 /**
@@ -61,7 +60,7 @@ public protocol ErrorHandler {
 	func handle(error: Error) async throws
 	
 	/**
-	 Depending on the `error` nature, make the decision whether there is a way to fix it and re-send the request once again.
+	 Depending on the `error` nature, make the decision whether there is a way to fix it (and maybe re-send the request once again).
 	 */
 	func canHandle(error: Error) -> Bool
 }

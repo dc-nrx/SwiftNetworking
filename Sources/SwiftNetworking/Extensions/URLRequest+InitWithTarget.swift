@@ -7,3 +7,29 @@
 
 import Foundation
 
+public extension URLRequest {
+	
+	init?<T: Target>(
+		host: String,
+		_ target: T
+	) {
+		guard let url = URL(host: host, target) else {
+			return nil
+		}
+		self.init(url: url)
+		
+		let contentTypeKey = "Content-Type"
+		let contentTypeJson = "application/json"
+			
+		var headers = target.headers ?? [:]
+		if target.body != nil,
+			headers[contentTypeKey] != nil {
+			headers[contentTypeKey] = contentTypeJson
+		}
+		
+		self.allHTTPHeaderFields = headers
+		self.httpMethod = target.method.rawValue
+		self.httpBody = target.body
+	}
+
+}

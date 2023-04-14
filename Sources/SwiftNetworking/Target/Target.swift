@@ -52,6 +52,6 @@ public extension Target {
 	}
 	
 	var debugDescription: String {
-		return description
+		description
 	}
 }

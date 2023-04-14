@@ -10,6 +10,7 @@ import Foundation
 public enum RegularHostError: Error {
 	case recoveryFromResponseErrorsFailed([Error])
 	case attemptToRecoverWithEmptyErrorsList
+	case requestGenerationFailed(any Target, _ afterPreprocessing: Bool)
 }
 
 open class RegularHost: Host {
@@ -52,7 +53,7 @@ private extension RegularHost {
 		_ target: T,
 		previousErrors: [Error] = []
 	) async throws -> T.Response {
-		let urlRequest = preprocessedUrlRequest(from: target)
+		let urlRequest = try preprocessedUrlRequest(from: target)
 		do {
 			let (data, _) = try await session.data(for: urlRequest)
 			return try target.decode(data)
@@ -69,10 +70,13 @@ private extension RegularHost {
 	
 	func preprocessedUrlRequest<T: Target>(
 		from target: T
-	) -> URLRequest {
+	) throws -> URLRequest {
 		var signedTarget = target
 		requestPreprocessor?.preprocess(&signedTarget)
-		return URLRequest(host: baseURLString, signedTarget)
+		guard let request = URLRequest(host: baseURLString, signedTarget) else {
+			throw RegularHostError.requestGenerationFailed(target, requestPreprocessor != nil)
+		}
+		return request
 	}
 
 }
