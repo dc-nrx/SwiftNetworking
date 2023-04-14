@@ -40,12 +40,15 @@ internal extension Logger {
 		function: String = #function,
 		line: Int = #line
 	) {
-		let message: String
+		var message: String
 		switch event {
 		case .sending(let target, let errors):
-			message = "Sending \(target); previous errors = \(errors)"
+			message = "Sending \(target)"
+			if !errors.isEmpty {
+				message += "; previous errors = \(errors)"
+			}
 		case .responseRecieved(let data, let response):
-			message = "Response received: data = \(data); response = \(response.customDescription(options: options))"
+			message = "Response received: \(data); \(response.customDescription(options: options))"
 		case .urlRequestGenerated(let target, let request):
 			message = "URL Request from target \(target) generated: \(request)"
 		case .preprocess(let target, let preprocessor):

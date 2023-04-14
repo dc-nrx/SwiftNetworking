@@ -33,7 +33,7 @@ internal extension URLResponse {
 	func customDescription(
 		options: [LogOptions]
 	) -> String {
-		var result = "URL: " + "\(String(describing: self.url))"
+		var result = self.url?.absoluteString ?? "<no url>"
 		if let httpResponse = self as? HTTPURLResponse {
 			result += ", Code: \(httpResponse.statusCode)"
 			if !options.contains(.omitResponseHeaders) {

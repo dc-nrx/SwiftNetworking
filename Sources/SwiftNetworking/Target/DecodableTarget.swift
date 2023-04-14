@@ -20,7 +20,7 @@ public struct DecodableTarget<T: Decodable>: Target {
 	public var mapResponseData: ResponseDataMapper
 	
 	public init(
-		path: String,
+		_ path: String,
 		method: HTTPMethod = .GET,
 		query: Query? = nil,
 		body: Data? = nil,

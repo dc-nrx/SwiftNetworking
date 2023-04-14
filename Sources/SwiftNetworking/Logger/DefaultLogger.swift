@@ -46,8 +46,8 @@ public class DefaultLogger: Logger {
 		function: String = #function,
 		line: Int = #line
 	) {
-		if level >= logLevel {			
-			print("🌐 [\(logLevel.rawValue.uppercased())] \(message)")
+		if level >= logLevel {
+			print("🌐 \(message)")
 		}
 	}
 	

@@ -11,23 +11,25 @@ public extension Target {
 	
 	var description: String {
 		var queryString = ""
-		if let query = query {
+		if let query = query,
+		   !query.isEmpty {
+			queryString += "?"
 			for (key, value) in query {
 				queryString += key + "=" + value.description
 			}
 		}
 		
-		var bodySuffixString = ""
+		var bodyString = ""
 		if let body = body {
-			bodySuffixString = " ## bodyHash = \(body.hashValue)"
+			bodyString = ", body = \(body)"
 		}
 		
-		var headersNewLine = ""
+		var headersString = ""
 		if let headers = headers {
-			headersNewLine = " ↓\nHeaders = \(headers)"
+			headersString = ", Headers = \(headers)"
 		}
 		
-		return method.rawValue + " " + path + "?" + queryString + bodySuffixString + headersNewLine
+		return method.rawValue + " " + path + queryString + bodyString + headersString
 	}
 	
 }
