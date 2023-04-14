@@ -60,7 +60,7 @@ private extension RegularHost {
 			logger?.event(.sending(target, previousErrors))
 			let (data, response) = try await session.data(for: urlRequest)
 			logger?.event(.responseRecieved(data, response))
-			return try target.decode(data)
+			return try target.mapResponseData(data)
 		} catch {
 			let extendedErrors = previousErrors.appending(error)
 			if !previousErrors.contains(where: { $0 == error }) {

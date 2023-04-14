@@ -14,10 +14,10 @@ public enum HTTPMethod: String {
 public protocol Target: CustomStringConvertible {
 
 	associatedtype Response = ()
-	typealias DecoderFunction = (Data) throws -> Response
+	typealias ResponseDataMapper = (Data) throws -> Response
 	
 	/// Target path - i.e. the part of url AFTER host address.
-    var path: String { get set }
+	var path: String { get set }
 	
 	var method: HTTPMethod { get set }
 	var query: Query? { get set }
@@ -25,5 +25,6 @@ public protocol Target: CustomStringConvertible {
 	var headers: Headers? { get set }
 	
 	/// The parsing closure. Has default implementation in `DecodableTarget`,  `DataTarget` and `PlainTarget`.
-	var decode: DecoderFunction { get }
+	var mapResponseData: ResponseDataMapper { get }
 }
+ 

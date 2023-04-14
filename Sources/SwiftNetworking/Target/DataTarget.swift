@@ -17,7 +17,7 @@ public struct DataTarget: Target {
 	public var query: Query?
 	public var headers: Headers?
 	
-	public var decode: (Data) throws -> Response = { $0 }
+	public var mapResponseData: (Data) throws -> Response = { $0 }
 	
 	public init(
 		_ path: String,
