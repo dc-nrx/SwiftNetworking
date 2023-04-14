@@ -9,13 +9,11 @@ import Foundation
 
 public extension URLRequest {
 	
-	init?<T: Target>(
+	init<T: Target>(
 		host: String,
 		_ target: T
-	) {
-		guard let url = URL(host: host, target) else {
-			return nil
-		}
+	) throws {
+		let url = try URL(host: host, target)
 		self.init(url: url)
 		
 		let contentTypeKey = "Content-Type"

@@ -10,7 +10,6 @@ import Foundation
 public enum RegularHostError: Error {
 	case recoveryFromResponseErrorsFailed([Error])
 	case attemptToRecoverWithEmptyErrorsList
-	case requestGenerationFailed(any Target, _ afterPreprocessing: Bool)
 }
 
 open class RegularHost: Host {
@@ -84,9 +83,7 @@ private extension RegularHost {
 			logger?.event(.preprocess(preprocessor, target))
 			preprocessor.preprocess(&signedTarget)
 		}
-		guard let request = URLRequest(host: baseURLString, signedTarget) else {
-			throw RegularHostError.requestGenerationFailed(target, requestPreprocessor != nil)
-		}
+		let request = try URLRequest(host: baseURLString, signedTarget)
 		logger?.event(.urlRequestGenerated(signedTarget, request))
 		return request
 	}

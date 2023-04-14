@@ -17,38 +17,38 @@ final class URLFromTargetSpec: XCTestCase {
 	
 	func testHostWithTrailingSlash_correctResult() {
 		let target = PlainTarget("/sample/path")
-		let request = URLRequest(host: sampleHostName + "/", target)!
+		let request = try! URLRequest(host: sampleHostName + "/", target)
 		validate(request: request)
 	}
 	
 	func testTargetWithPrefixSlash_correctResult() {
 		let target = PlainTarget("/sample/path")
-		let request = URLRequest(host: sampleHostName, target)!
+		let request = try! URLRequest(host: sampleHostName, target)
 		validate(request: request)
 	}
 	
 	func testTargetWithPrefixSlash_HostWithTrailingSlash_correctResult() {
 		let target = PlainTarget("/sample/path")
-		let request = URLRequest(host: sampleHostName + "/", target)!
+		let request = try! URLRequest(host: sampleHostName + "/", target)
 		validate(request: request)
 	}
 
 	// MARK: - Query
 	
 //	func testQueryItems_StringValues() {
-//		
+//
 //	}
-//	
+//
 //	func testQueryItems_IntValues() {
-//		
+//
 //	}
-//	
+//
 //	func testQueryItems_FloatValues() {
-//		
+//
 //	}
-//	
+//
 //	func testQueryItems_BoolValues() {
-//		
+//
 //	}
 	
 }
