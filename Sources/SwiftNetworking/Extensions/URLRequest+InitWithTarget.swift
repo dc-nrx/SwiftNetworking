@@ -10,10 +10,10 @@ import Foundation
 public extension URLRequest {
 	
 	init<T: Target>(
-		host: String,
+		baseUrl: String,
 		_ target: T
 	) throws {
-		let url = try URL(host: host, target)
+		let url = try URL(baseUrl: baseUrl, target)
 		self.init(url: url)
 		
 		let contentTypeKey = "Content-Type"

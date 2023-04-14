@@ -14,7 +14,7 @@ public enum HostMockError: Error {
 
 public class HostMock: SwiftNetworking.Host {
 	
-	public var baseURLString: String
+	public var address: String
 	
 	/**
 	 The default response mock. Being used for all requests not specified by `mock(_ response:, for target:)` method.
@@ -25,10 +25,10 @@ public class HostMock: SwiftNetworking.Host {
 
 	public init(
 		mockedResponses: [String: Data] = [String: Data](),
-		baseURLString: String = "__MOCK__//",
+		address: String = "__MOCK__",
 		defaultResponseMock: ResponseMock? = ResponseMock()
 	) {
-		self.baseURLString = baseURLString
+		self.address = address
 	}
 
 	public func send<T>(_ target: T) async throws -> T.Response where T : Target {

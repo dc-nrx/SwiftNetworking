@@ -15,10 +15,10 @@ enum UrlFromTargetGenerationError: Error {
 public extension URL {
 	
 	init(
-		host: String,
+		baseUrl: String,
 		_ target: any Target
 	) throws {
-		guard let urlWithoutQuery = URL.makePreQueryUrl(host: host, path: target.path) else {
+		guard let urlWithoutQuery = URL.makePreQueryUrl(baseUrl: baseUrl, path: target.path) else {
 			throw UrlFromTargetGenerationError.preQueryUrlGenerationFailed(target)
 		}
 		
@@ -33,17 +33,17 @@ public extension URL {
 private extension URL {
 	
 	static func makePreQueryUrl(
-		host: String,
+		baseUrl: String,
 		path: String
 	) -> URL? {
-		var hostNormalized = host
-		if host.last == "/" && path.first == "/" {
-			hostNormalized.removeLast()
-		} else if host.last != "/" && path.first != "/" {
-			hostNormalized += "/"
+		var baseUrlNormalized = baseUrl
+		if baseUrl.last == "/" && path.first == "/" {
+			baseUrlNormalized.removeLast()
+		} else if baseUrl.last != "/" && path.first != "/" {
+			baseUrlNormalized += "/"
 		}
 		
-		return URL(string: hostNormalized + path)
+		return URL(string: baseUrlNormalized + path)
 	}
 	
 	func appending(

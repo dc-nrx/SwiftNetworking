@@ -14,20 +14,23 @@ public enum RegularHostError: Error {
 
 open class RegularHost: Host {
 	
+	public var protocolName: String
 	public var requestPreprocessor: RequestPreprocessor?
 	public var errorHandler: ErrorHandler?
-	public var baseURLString: String
+	public var address: String
 	public var session: URLSession
 	public var logger: Logger?
 	
 	public init(
-		_ baseURLString: String,
+		protocolName: String = "https",
+		_ address: String,
 		requestPreprocessor: RequestPreprocessor? = nil,
 		errorHandler: ErrorHandler? = nil,
 		session: URLSession = .shared,
 		logger: Logger? = DefaultLogger()
 	) {
-		self.baseURLString = baseURLString
+		self.protocolName = protocolName
+		self.address = address
 		self.requestPreprocessor = requestPreprocessor
 		self.errorHandler = errorHandler
 		self.session = session
@@ -83,7 +86,8 @@ private extension RegularHost {
 			logger?.event(.preprocess(preprocessor, target))
 			preprocessor.preprocess(&signedTarget)
 		}
-		let request = try URLRequest(host: baseURLString, signedTarget)
+		let baseUrlString = protocolName + "://" + address
+		let request = try URLRequest(baseUrl: baseUrlString, signedTarget)
 		logger?.event(.urlRequestGenerated(signedTarget, request))
 		return request
 	}

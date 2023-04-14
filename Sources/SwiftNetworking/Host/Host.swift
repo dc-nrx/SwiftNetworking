@@ -12,10 +12,11 @@ import Foundation
  */
 public protocol Host {
 
+	var protocolName: String { get }
+	var address: String { get }
 	var requestPreprocessor: RequestPreprocessor? { get }
 	var errorHandler: ErrorHandler? { get }
 	var session: URLSession { get }
-	var baseURLString: String { get }
 	
 	func send<T: Target> (
 		_ target: T
@@ -24,6 +25,8 @@ public protocol Host {
 
 public extension Host {
 
+	var protocolName: String { "https" }
+	
 	var requestPreprocessor: RequestPreprocessor? { nil }
 	var errorHandler: ErrorHandler? { nil }
 	var session: URLSession { .shared }
