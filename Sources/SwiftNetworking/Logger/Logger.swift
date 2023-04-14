@@ -7,14 +7,10 @@
 
 import Foundation
 
-
-
 public enum LogLevel: String, CaseIterable, Comparable {
 
 	case verbose
 	case debug
-	case warninig
-	case error
 	case none
 	
 	public static func < (lhs: LogLevel, rhs: LogLevel) -> Bool {
@@ -34,35 +30,15 @@ public protocol Logger {
 	)
 }
 
-public class SimpleLogger: Logger {
+public extension Logger {
 	
-	public static let logLevelEnvKey = "SWIFT_NETWORKING_LOG_LEVEL"
-	
-	public var logLevel: LogLevel = {
-		#if DEBUG
-		var result = LogLevel.debug
-		#else
-		var result = LogLevel.none
-		#endif
-		if let customLogLevelString = ProcessInfo.processInfo.environment[SimpleLogger.logLevelEnvKey],
-		   let customLogLevel = LogLevel(rawValue: customLogLevelString) {
-			result = customLogLevel
-		}
-		
-		return result
-	}()
-	
-	public func log(
+	func log(
 		_ level: LogLevel,
 		_ message: String,
 		file: String = #file,
 		function: String = #function,
 		line: Int = #line
 	) {
-		if level >= logLevel {
-			let fileName = file.components(separatedBy: "/").last ?? file
-			print("[\(logLevel.rawValue.uppercased())] \(fileName):\(function):\(line) \(message)")
-		}
+		log(level, message, file: file, function: function, line: line)
 	}
-	
 }

@@ -30,7 +30,7 @@ public extension Host {
 }
 
 /**
- Adds headers to `Target` - such as authorization, preffered language etc.
+ Alter a `target` before sending it - e.g. add authorization header, specify preffered language etc.
  */
 public protocol RequestPreprocessor: AnyObject {
 	
@@ -64,3 +64,5 @@ public protocol ErrorHandler {
 	 */
 	func canHandle(error: Error) -> Bool
 }
+
+//TODO: Add ResponsePreprocessor

@@ -19,17 +19,20 @@ open class RegularHost: Host {
 	public var errorHandler: ErrorHandler?
 	public var baseURLString: String
 	public var session: URLSession
+	public var logger: Logger?
 	
 	public init(
 		baseURLString: String,
 		requestPreprocessor: RequestPreprocessor? = nil,
 		errorHandler: ErrorHandler? = nil,
-		session: URLSession = .shared
+		session: URLSession = .shared,
+		logger: Logger? = DefaultLogger()
 	) {
 		self.baseURLString = baseURLString
 		self.requestPreprocessor = requestPreprocessor
 		self.errorHandler = errorHandler
 		self.session = session
+		self.logger = logger
 	}
 	
 	/**
@@ -55,14 +58,19 @@ private extension RegularHost {
 	) async throws -> T.Response {
 		let urlRequest = try preprocessedUrlRequest(from: target)
 		do {
-			let (data, _) = try await session.data(for: urlRequest)
+			logger?.event(.sending(target, previousErrors))
+			let (data, response) = try await session.data(for: urlRequest)
+			logger?.event(.responseRecieved(data, response))
 			return try target.decode(data)
 		} catch {
 			let extendedErrors = previousErrors.appending(error)
 			if !previousErrors.contains(where: { $0 == error }) {
+				logger?.event(.errorResolutionStarted(error, previousErrors))
 				try await errorHandler?.handle(error: error)
+				logger?.event(.errorResolutionFinished(error, previousErrors))
 				return try await recursiveRequest(target, previousErrors: extendedErrors)
 			} else {
+				logger?.event(.repeatedErrorOccured(error, previousErrors))
 				throw previousErrors.isEmpty ? error : RegularHostError.recoveryFromResponseErrorsFailed(extendedErrors)
 			}
 		}
@@ -72,10 +80,14 @@ private extension RegularHost {
 		from target: T
 	) throws -> URLRequest {
 		var signedTarget = target
-		requestPreprocessor?.preprocess(&signedTarget)
+		if let preprocessor = requestPreprocessor {
+			logger?.event(.preprocess(preprocessor, target))
+			preprocessor.preprocess(&signedTarget)
+		}
 		guard let request = URLRequest(host: baseURLString, signedTarget) else {
 			throw RegularHostError.requestGenerationFailed(target, requestPreprocessor != nil)
 		}
+		logger?.event(.urlRequestGenerated(signedTarget, request))
 		return request
 	}
 
