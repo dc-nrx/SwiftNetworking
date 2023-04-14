@@ -52,7 +52,7 @@ internal extension Logger {
 								error: nil,
 								previousErrors: previousErrors)
 		case .responseRecieved(let data, let response):
-			message = "Response received: \(data); \(response.customDescription(options: options))"
+			message = "Response received: \(response.customDescription(options: options)) | \(data)" 
 		case .urlRequestGenerated(let target, let request):
 			message = "URL Request from target \(target) generated: \(request)"
 		case .preprocess(let target, let preprocessor):

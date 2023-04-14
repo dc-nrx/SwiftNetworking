@@ -33,12 +33,13 @@ internal extension URLResponse {
 	func customDescription(
 		options: [LogOptions]
 	) -> String {
-		var result = self.url?.absoluteString ?? "<no url>"
-		if let httpResponse = self as? HTTPURLResponse {
-			result += ", Code: \(httpResponse.statusCode)"
-			if options.contains(.showResponseHeaders) {
-				result += ", Headers: \(httpResponse.allHeaderFields)"
-			}
+		let urlString = url?.absoluteString ?? "<no url>"
+		guard let httpResponse = self as? HTTPURLResponse else {
+			return urlString
+		}
+		var result = "\(httpResponse.statusCode)" + " | " + urlString
+		if options.contains(.showResponseHeaders) {
+			result += ", Headers: \(httpResponse.allHeaderFields)"
 		}
 		return result
 	}
