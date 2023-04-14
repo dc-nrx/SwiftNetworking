@@ -61,7 +61,7 @@ private extension RegularHost {
 	) async throws -> T.Response {
 		let urlRequest = try preprocessedUrlRequest(from: target)
 		do {
-			logger?.event(.sending(target, previousErrors))
+			logger?.event(.sending(urlRequest, previousErrors))
 			let (data, response) = try await session.data(for: urlRequest)
 			logger?.event(.responseRecieved(data, response))
 			return try target.mapResponseData(data)
@@ -73,7 +73,7 @@ private extension RegularHost {
 				logger?.event(.errorResolutionFinished(error, previousErrors))
 				return try await recursiveRequest(target, previousErrors: extendedErrors)
 			} else {
-				logger?.event(.repeatedErrorOccured(error, previousErrors))
+				logger?.event(.unhandeledErrorOccured(error, previousErrors))
 				throw previousErrors.isEmpty ? error : RegularHostError.recoveryFromResponseErrorsFailed(extendedErrors)
 			}
 		}

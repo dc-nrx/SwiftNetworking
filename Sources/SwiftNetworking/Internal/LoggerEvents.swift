@@ -9,13 +9,13 @@ import Foundation
 
 internal enum LoggerEvent {
 
-	case sending(any Target, _ previouslyHandeledErrors: [Error])
+	case sending(URLRequest, _ previouslyHandeledErrors: [Error])
 	case responseRecieved(Data, URLResponse)
 	case urlRequestGenerated(any Target, URLRequest)
 	case preprocess(any RequestPreprocessor, any Target)
 	case errorResolutionStarted(Error, _ previousErrors: [Error])
 	case errorResolutionFinished(Error, _ previousErrors: [Error])
-	case repeatedErrorOccured(Error, _ previousErrors: [Error])
+	case unhandeledErrorOccured(Error, _ previousErrors: [Error])
 		
 	var level: LogLevel {
 		switch self {
@@ -25,15 +25,20 @@ internal enum LoggerEvent {
 			
 		case .sending,
 				.responseRecieved,
-				.errorResolutionStarted,
-				.errorResolutionFinished,
-				.repeatedErrorOccured:
+				.errorResolutionFinished:
 			return .debug
+
+		case .errorResolutionStarted:
+			return .warning
+
+		case .unhandeledErrorOccured:
+			return .error
 		}
 	}
 }
 
 internal extension Logger {
+	
 	func event(
 		_ event: LoggerEvent,
 		file: String = #file,
@@ -42,11 +47,10 @@ internal extension Logger {
 	) {
 		var message: String
 		switch event {
-		case .sending(let target, let errors):
-			message = "Sending \(target)"
-			if !errors.isEmpty {
-				message += "; previous errors = \(errors)"
-			}
+		case .sending(let request, let previousErrors):
+			message = construct("Sending \(request.customDescription(options: options))",
+								error: nil,
+								previousErrors: previousErrors)
 		case .responseRecieved(let data, let response):
 			message = "Response received: \(data); \(response.customDescription(options: options))"
 		case .urlRequestGenerated(let target, let request):
@@ -54,13 +58,31 @@ internal extension Logger {
 		case .preprocess(let target, let preprocessor):
 			message = "Target \(target) preprocessing started with \(preprocessor)"
 		case .errorResolutionStarted(let error, let previousErrors):
-			message = "Error resolution started \(error); previous errors = \(previousErrors)"
+			message = construct("Error resolution started", error: error,
+								previousErrors: previousErrors)
 		case .errorResolutionFinished(let error, let previousErrors):
-			message = "Error resolution finished \(error); previous errors = \(previousErrors)"
-		case .repeatedErrorOccured(let error, let previousErrors):
-			message = "Repeated error occured \(error); previous errors = \(previousErrors)"
+			message = construct("Error resolution finished", error: error,
+								previousErrors: previousErrors)
+		case .unhandeledErrorOccured(let error, let previousErrors):
+			message = construct("Unhandeled error occured", error: error,
+								previousErrors: previousErrors)
 		}
 
 		log(event.level, message, file: file, function: function, line: line)
+	}
+	
+	func construct(
+		_ originalMessage: String,
+		error: Error?,
+		previousErrors: [Error]
+	) -> String {
+		var message = originalMessage
+		if let error = error {
+			message += " | error: \(error)"
+		}
+		if !previousErrors.isEmpty {
+			message += "\nPREVIOUS ERRORS: \(previousErrors)"
+		}
+		return message
 	}
 }

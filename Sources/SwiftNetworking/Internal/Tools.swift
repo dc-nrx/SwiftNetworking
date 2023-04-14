@@ -36,9 +36,24 @@ internal extension URLResponse {
 		var result = self.url?.absoluteString ?? "<no url>"
 		if let httpResponse = self as? HTTPURLResponse {
 			result += ", Code: \(httpResponse.statusCode)"
-			if !options.contains(.omitResponseHeaders) {
+			if options.contains(.showResponseHeaders) {
 				result += ", Headers: \(httpResponse.allHeaderFields)"
 			}
+		}
+		return result
+	}
+}
+
+internal extension URLRequest {
+	
+	func customDescription(
+		options: [LogOptions]
+	) -> String {
+		var result = httpMethod ?? "<no method>"
+		result += " " + (url?.absoluteString ?? "<no url>")
+		if options.contains(.showResponseHeaders) {
+			let headers = allHTTPHeaderFields ?? [:]
+			result += ", Headers: \(headers)"
 		}
 		return result
 	}
