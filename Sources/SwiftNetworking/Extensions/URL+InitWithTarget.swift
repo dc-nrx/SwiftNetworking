@@ -13,6 +13,7 @@ public extension URL {
 		host: String,
 		_ target: any Target
 	) {
+		// Process double- and no-slash cases between host and target
 		var hostNormalized = host
 		if host.last == "/" && target.path.first == "/" {
 			hostNormalized.removeLast()
@@ -20,6 +21,7 @@ public extension URL {
 			hostNormalized += "/"
 		}
 		
+		// Append query
 		let urlWithoutQuery = URL(string: hostNormalized + target.path)!
 		var urlComponents = URLComponents(url: urlWithoutQuery, resolvingAgainstBaseURL: false)!
 		urlComponents.queryItems = target.query?.map { URLQueryItem(name: $0, value: "\($1)") }
@@ -31,4 +33,5 @@ public extension URL {
 			return nil
 		}
 	}
+
 }
