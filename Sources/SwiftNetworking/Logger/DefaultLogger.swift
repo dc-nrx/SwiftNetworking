@@ -48,7 +48,7 @@ public class DefaultLogger: Logger {
 	) {
 		if level >= logLevel {
 			let fileName = file.components(separatedBy: "/").last ?? file
-			print("[\(logLevel.rawValue.uppercased())] \(fileName):\(function):\(line) \(message)")
+			print("[NETWORK|\(logLevel.rawValue.uppercased())] \(message)")
 		}
 	}
 	
