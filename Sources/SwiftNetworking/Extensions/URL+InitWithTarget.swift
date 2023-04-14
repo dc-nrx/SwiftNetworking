@@ -46,7 +46,9 @@ private extension URL {
 		return URL(string: hostNormalized + path)
 	}
 	
-	func appending(_ query: Query?) -> URL? {
+	func appending(
+		_ query: Query?
+	) -> URL? {
 		var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: false)!
 		urlComponents.queryItems = query?.map { URLQueryItem(name: $0, value: "\($1)") }
 		urlComponents.percentEncodedQuery = urlComponents.percentEncodedQuery?.replacingOccurrences(of: "+", with: "%2B")

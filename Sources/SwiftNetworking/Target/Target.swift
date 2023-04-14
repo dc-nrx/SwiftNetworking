@@ -10,8 +10,8 @@ public enum HTTPMethod: String {
 	case POST, GET, PUT, PATCH, DELETE
 }
 
-/// The protocol used to define the specifications necessary for a `MoyaProvider`.
-public protocol Target: CustomStringConvertible, CustomDebugStringConvertible {
+/// The main model item used a source to create url request.
+public protocol Target: CustomStringConvertible {
 
 	associatedtype Response = ()
 	typealias DecoderFunction = (Data) throws -> Response
@@ -24,34 +24,6 @@ public protocol Target: CustomStringConvertible, CustomDebugStringConvertible {
 	var body: Data? { get set }
 	var headers: Headers? { get set }
 	
-	/// The parsing closure. Has default implementations for `()` and `Decodable` response types.
+	/// The parsing closure. Has default implementation in `DecodableTarget`,  `DataTarget` and `PlainTarget`.
 	var decode: DecoderFunction { get }
-}
-
-public extension Target {
-	
-	var description: String {
-		var queryString = ""
-		if let query = query {
-			for (key, value) in query {
-				queryString += key + "=" + value.description
-			}
-		}
-		
-		var bodySuffixString = ""
-		if let body = body {
-			bodySuffixString = " ## bodyHash = \(body.hashValue)"
-		}
-		
-		var headersNewLine = ""
-		if let headers = headers {
-			headersNewLine = " ↓\nHeaders = \(headers)"
-		}
-		
-		return method.rawValue + " " + path + "?" + queryString + bodySuffixString + headersNewLine
-	}
-	
-	var debugDescription: String {
-		description
-	}
 }
