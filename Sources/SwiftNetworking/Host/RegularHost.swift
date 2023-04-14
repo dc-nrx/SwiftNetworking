@@ -21,7 +21,7 @@ open class RegularHost: Host {
 	public var logger: Logger?
 	
 	public init(
-		baseURLString: String,
+		_ baseURLString: String,
 		requestPreprocessor: RequestPreprocessor? = nil,
 		errorHandler: ErrorHandler? = nil,
 		session: URLSession = .shared,
@@ -50,7 +50,7 @@ open class RegularHost: Host {
 }
 
 private extension RegularHost {
-	
+
 	func recursiveRequest<T: Target> (
 		_ target: T,
 		previousErrors: [Error] = []
