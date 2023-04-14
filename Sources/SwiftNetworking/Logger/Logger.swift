@@ -7,6 +7,16 @@
 
 import Foundation
 
+public struct LogOptions: OptionSet {
+	
+	public static let omitResponseHeaders = LogOptions(rawValue: 1 << 0)
+	
+	public let rawValue: Int
+	public init(rawValue: Int) {
+		self.rawValue = rawValue
+	}
+}
+
 public enum LogLevel: String, CaseIterable, Comparable {
 
 	case verbose
@@ -21,6 +31,8 @@ public enum LogLevel: String, CaseIterable, Comparable {
 
 public protocol Logger {
 	
+	var options: [LogOptions] { get }
+	
 	func log(
 		_ level: LogLevel,
 		_ message: String,
@@ -31,7 +43,7 @@ public protocol Logger {
 }
 
 public extension Logger {
-	
+		
 	func log(
 		_ level: LogLevel,
 		_ message: String,

@@ -10,7 +10,8 @@ import Foundation
 public class DefaultLogger: Logger {
 	
 	public static let logLevelEnvKey = "SWIFT_NETWORKING_LOG_LEVEL"
-	
+
+	public var options: [LogOptions]
 	public var logLevel: LogLevel
 	
 	/**
@@ -19,8 +20,11 @@ public class DefaultLogger: Logger {
 	 If neither is set, the log level is set to `.debug` for DEBUG builds and to `.none` otherwise.
 	 */
 	public init(
-		_ logLevel: LogLevel? = nil
+		_ logLevel: LogLevel? = nil,
+		options: [LogOptions] = [.omitResponseHeaders]
 	) {
+		self.options = options
+		
 		if let customLogLevel = logLevel {
 			self.logLevel = customLogLevel
 		} else if let envDefinedLogLevelString = ProcessInfo.processInfo.environment[DefaultLogger.logLevelEnvKey],

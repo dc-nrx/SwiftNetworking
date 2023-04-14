@@ -8,7 +8,6 @@
 import Foundation
 
 internal extension Array {
-	
 	func appending(_ newElement: Element) -> Self {
 		var result = self
 		result.append(newElement)
@@ -26,5 +25,21 @@ internal func == (lhs: Error, rhs: Error) -> Bool {
 internal extension Equatable where Self : Error {
 	static func == (lhs: Self, rhs: Self) -> Bool {
 		lhs as Error == rhs as Error
+	}
+}
+
+internal extension URLResponse {
+	
+	func customDescription(
+		options: [LogOptions]
+	) -> String {
+		var result = "URL: " + "\(String(describing: self.url))"
+		if let httpResponse = self as? HTTPURLResponse {
+			result += ", Code: \(httpResponse.statusCode)"
+			if !options.contains(.omitResponseHeaders) {
+				result += ", Headers: \(httpResponse.allHeaderFields)"
+			}
+		}
+		return result
 	}
 }
