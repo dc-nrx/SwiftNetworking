@@ -15,10 +15,11 @@ public enum RegularHostError: Error {
 open class RegularHost: Host {
 	
 	public var protocolName: String
-	public var requestPreprocessor: RequestPreprocessor?
-	public var errorHandler: ErrorHandler?
 	public var address: String
 	public var session: URLSession
+
+	public var requestPreprocessor: RequestPreprocessor?
+	public var errorHandler: ErrorHandler?
 	public var logger: Logger?
 	
 	public init(

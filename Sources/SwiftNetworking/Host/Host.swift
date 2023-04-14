@@ -14,9 +14,10 @@ public protocol Host {
 
 	var protocolName: String { get }
 	var address: String { get }
+	var session: URLSession { get }
+	
 	var requestPreprocessor: RequestPreprocessor? { get }
 	var errorHandler: ErrorHandler? { get }
-	var session: URLSession { get }
 	
 	func send<T: Target> (
 		_ target: T
