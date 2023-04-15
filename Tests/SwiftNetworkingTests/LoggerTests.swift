@@ -24,8 +24,8 @@ final class LoggerTests: XCTestCase {
     func testExample() async throws {
 		let sut = DefaultLogger()
 		let host = RegularHost("api.sampleapis.com", logger: sut)
-		let target = DecodableTarget<Data>("playstation/games")
-		try await host.send(target)
+		let target = DataTarget("playstation/games")
+		_ = try await host.send(target)
     }
 
     func testPerformanceExample() throws {
