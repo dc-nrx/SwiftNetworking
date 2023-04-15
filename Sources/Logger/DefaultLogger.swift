@@ -57,9 +57,19 @@ public class DefaultLogger: Logger {
 		line: Int = #line
 	) {
 		if level >= logLevel {
-			let prefix = (commonPrefix ?? "") + (levelPrefixes?[level] ?? "")
-			print("\(prefix) \(message)")
+			print("\(messagePrefix(logLevel))\(message)")
 		}
+	}
+	
+	private func messagePrefix(_ logLevel: LogLevel) -> String {
+		var prefix = ""
+		if let commonPrefix {
+			prefix += commonPrefix + " "
+		}
+		if let levelPrefix = levelPrefixes?[logLevel] {
+			prefix += levelPrefix + " "
+		}
+		return prefix
 	}
 	
 }
