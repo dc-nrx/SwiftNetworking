@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Logger
+import ReplaceableLogger
 
 public enum RegularHostError: Error {
 	case recoveryFromResponseErrorsFailed([Error])

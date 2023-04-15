@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "replaceablelogger",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dc-nrx/ReplaceableLogger.git",
+      "state" : {
+        "revision" : "ae9d38efae57cd1d8ab17ebf2503c4d061f57f37",
+        "version" : "0.1.1"
+      }
+    }
+  ],
+  "version" : 2
+}

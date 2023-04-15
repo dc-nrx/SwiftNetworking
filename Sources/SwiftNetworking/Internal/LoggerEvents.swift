@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Logger
+import ReplaceableLogger
 
 internal enum LoggerEvent {
 
@@ -50,11 +50,11 @@ internal extension Logger {
 		switch event {
 		case .sending(let request, let previousErrors):
 			let prefix = previousErrors.isEmpty ? "" : "[Repeated] "
-			message = construct("\(prefix)Sending \(request.loggerDescription(options))",
+			message = construct("\(prefix)Sending \(request.loggerDescription)",
 								error: nil,
 								previousErrors: previousErrors)
 		case .responseRecieved(let data, let response):
-			message = "Response received: \(response.loggerDescription(options)) | \(data)" 
+			message = "Response received: \(response.loggerDescription) | \(data)" 
 		case .urlRequestGenerated(let target, let request):
 			message = "URL Request from target \(target) generated: \(request)"
 		case .preprocess(let target, let preprocessor):
