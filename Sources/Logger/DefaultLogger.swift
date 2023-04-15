@@ -14,13 +14,12 @@ public class DefaultLogger: Logger {
 	public var options: [LogOptions]
 	public var logLevel: LogLevel
 
-	public var levelPrefix: [LogLevel: String]? = [
-		.warning: "⚠️",
-		.error: "❌"
-	]
-	
-	public var messageUniversalPrefix: String? = "🌐"
-	
+	/// Added at the beginnig of each message.
+	public var commonPrefix: String?
+
+	/// Added after `commonPrefix` to each message with corresponding log level.
+	public var levelPrefixes: [LogLevel: String]?
+		
 	/**
 	 The log level can be set either directly as `logLevel` parameter on init, or as `SWIFT_NETWORKING_LOG_LEVEL` env. variable value.
 	 The input parameter has priority over env. variable setting.
@@ -28,9 +27,13 @@ public class DefaultLogger: Logger {
 	 */
 	public init(
 		_ logLevel: LogLevel? = nil,
-		options: [LogOptions] = []
+		options: [LogOptions] = [],
+		levelPrefixes: [LogLevel: String]? = [.warning: "⚠️", .error: "❌"],
+		commonPrefix: String? = nil
 	) {
 		self.options = options
+		self.levelPrefixes = levelPrefixes
+		self.commonPrefix = commonPrefix
 		
 		if let customLogLevel = logLevel {
 			self.logLevel = customLogLevel
@@ -54,7 +57,7 @@ public class DefaultLogger: Logger {
 		line: Int = #line
 	) {
 		if level >= logLevel {
-			let prefix = (messageUniversalPrefix ?? "") + (levelPrefix?[level] ?? "")
+			let prefix = (commonPrefix ?? "") + (levelPrefixes?[level] ?? "")
 			print("\(prefix) \(message)")
 		}
 	}

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Logger
 
 internal enum LoggerEvent {
 

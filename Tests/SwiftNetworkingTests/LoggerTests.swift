@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import Logger
 import SwiftNetworking
 import SwiftNetworkingMocks
 
@@ -22,7 +23,7 @@ final class LoggerTests: XCTestCase {
     }
 
     func testExample() async throws {
-		let sut = DefaultLogger()
+		let sut = DefaultLogger(commonPrefix: "🌐")
 		let host = RegularHost("api.sampleapis.com", logger: sut)
 		let target = DataTarget("playstation/games")
 		_ = try await host.send(target)

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Logger
 
 public enum RegularHostError: Error {
 	case recoveryFromResponseErrorsFailed([Error])
@@ -28,7 +29,7 @@ open class RegularHost: Host {
 		requestPreprocessor: RequestPreprocessor? = nil,
 		errorHandler: ErrorHandler? = nil,
 		session: URLSession = .shared,
-		logger: Logger? = DefaultLogger()
+		logger: Logger? = DefaultLogger(commonPrefix: "🌐")
 	) {
 		self.protocolName = protocolName
 		self.address = address
