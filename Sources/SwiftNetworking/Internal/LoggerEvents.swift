@@ -48,7 +48,8 @@ internal extension Logger {
 		var message: String
 		switch event {
 		case .sending(let request, let previousErrors):
-			message = construct("Sending \(request.customDescription(options: options))",
+			let prefix = previousErrors.isEmpty ? "" : "[Repeated] "
+			message = construct("\(prefix)Sending \(request.customDescription(options: options))",
 								error: nil,
 								previousErrors: previousErrors)
 		case .responseRecieved(let data, let response):
