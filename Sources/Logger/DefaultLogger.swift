@@ -12,7 +12,7 @@ public class DefaultLogger: Logger {
 	public static let logLevelEnvKey = "SWIFT_NETWORKING_LOG_LEVEL"
 
 	public var options: [LogOptions]
-	public var logLevel: LogLevel
+	public var minLogLevel: LogLevel
 
 	/// Added at the beginnig of each message.
 	public var commonPrefix: String?
@@ -36,15 +36,15 @@ public class DefaultLogger: Logger {
 		self.commonPrefix = commonPrefix
 		
 		if let customLogLevel = logLevel {
-			self.logLevel = customLogLevel
+			self.minLogLevel = customLogLevel
 		} else if let envDefinedLogLevelString = ProcessInfo.processInfo.environment[DefaultLogger.logLevelEnvKey],
 				  let envDefinedLogLevel = LogLevel(rawValue: envDefinedLogLevelString) {
-			self.logLevel = envDefinedLogLevel
+			self.minLogLevel = envDefinedLogLevel
 		} else {
 			#if DEBUG
-			self.logLevel = .debug
+			self.minLogLevel = .debug
 			#else
-			self.logLevel = .nothing
+			self.minLogLevel = .nothing
 			#endif
 		}
 	}
@@ -56,8 +56,8 @@ public class DefaultLogger: Logger {
 		function: String = #function,
 		line: Int = #line
 	) {
-		if level >= logLevel {
-			print("\(messagePrefix(logLevel))\(message)")
+		if level >= minLogLevel {
+			print("\(messagePrefix(level))\(message)")
 		}
 	}
 	
