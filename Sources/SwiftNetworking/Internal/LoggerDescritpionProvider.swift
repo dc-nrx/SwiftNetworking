@@ -17,11 +17,11 @@ extension URLResponse: LoggerDescritpionProvider {
 	
 	var loggerDescription: String {
 		let urlString = url?.absoluteString ?? "<no url>"
-		guard let httpResponse = self as? HTTPURLResponse else {
+		if let httpResponse = self as? HTTPURLResponse {
+			return "\(httpResponse.statusCode)" + " | " + urlString
+		} else {
 			return urlString
 		}
-		var result = "\(httpResponse.statusCode)" + " | " + urlString
-		return result
 	}
 }
 
