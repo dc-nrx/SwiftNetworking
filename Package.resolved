@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dc-nrx/ReplaceableLogger.git",
       "state" : {
-        "revision" : "ae9d38efae57cd1d8ab17ebf2503c4d061f57f37",
-        "version" : "0.1.1"
+        "revision" : "b2099f13b9e1f3caed6c62e6fe6d4eff3ac6eca3",
+        "version" : "0.1.3"
       }
     }
   ],

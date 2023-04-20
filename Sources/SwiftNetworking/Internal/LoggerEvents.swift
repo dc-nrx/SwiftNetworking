@@ -17,25 +17,7 @@ internal enum LoggerEvent {
 	case errorResolutionStarted(Error, _ previousErrors: [Error])
 	case errorResolutionFinished(Error, _ previousErrors: [Error])
 	case unhandeledErrorOccured(Error, _ previousErrors: [Error])
-		
-	var level: LogLevel {
-		switch self {
-		case .urlRequestGenerated,
-				.preprocess:
-			return .verbose
-			
-		case .sending,
-				.responseRecieved,
-				.errorResolutionFinished:
-			return .debug
-
-		case .errorResolutionStarted:
-			return .warning
-
-		case .unhandeledErrorOccured:
-			return .error
-		}
-	}
+	
 }
 
 internal extension Logger {
@@ -46,31 +28,47 @@ internal extension Logger {
 		function: String = #function,
 		line: Int = #line
 	) {
-		var message: String
+		let lg: (LogLevel, @autoclosure ()->String) -> () = { level, message in
+			log(level, message(), file: file, function: function, line: line)
+		}
 		switch event {
+			
 		case .sending(let request, let previousErrors):
 			let prefix = previousErrors.isEmpty ? "" : "[Repeated] "
-			message = construct("\(prefix)Sending \(request.loggerDescription)",
-								error: nil,
-								previousErrors: previousErrors)
+			lg(.debug, construct("\(prefix)Sending \(request.loggerDescription)",
+								 error: nil,
+								 previousErrors: previousErrors))
+			lg(.verbose, headersString(from: request.allHTTPHeaderFields))
+			lg(.verbose, bodyString(request.httpBody))
+		
 		case .responseRecieved(let data, let response):
-			message = "Response received: \(response.loggerDescription) | \(data)" 
+			lg(.debug, "Response received: \(response.loggerDescription) | \(data)")
+			if let headers = (response as? HTTPURLResponse)?.allHeaderFields {
+				lg(.verbose, headersString(from: headers))
+			}
+			lg(.verbose, bodyString(data))
+		
 		case .urlRequestGenerated(let target, let request):
-			message = "URL Request from target \(target) generated: \(request)"
+			lg(.verbose, "URL Request from target \(target) generated: \(request)")
+		
 		case .preprocess(let target, let preprocessor):
-			message = "Target \(target) preprocessing started with \(preprocessor)"
+			lg(.verbose, "Target \(target) preprocessing started with \(preprocessor)")
+		
 		case .errorResolutionStarted(let error, let previousErrors):
-			message = construct("Error resolution started", error: error,
-								previousErrors: previousErrors)
+			lg(.warning, construct("Error resolution started",
+								 error: error,
+								 previousErrors: previousErrors))
+		
 		case .errorResolutionFinished(let error, let previousErrors):
-			message = construct("Error resolution finished", error: error,
-								previousErrors: previousErrors)
+			lg(.debug, construct("Error resolution finished",
+								 error: error,
+								 previousErrors: previousErrors))
+		
 		case .unhandeledErrorOccured(let error, let previousErrors):
-			message = construct("Unhandeled error occured", error: error,
-								previousErrors: previousErrors)
+			lg(.error, construct("Unhandeled error occured",
+								 error: error,
+								 previousErrors: previousErrors))
 		}
-
-		log(event.level, message, file: file, function: function, line: line)
 	}
 	
 	func construct(
@@ -86,5 +84,34 @@ internal extension Logger {
 			message += "\nPREVIOUS ERRORS: \(previousErrors)"
 		}
 		return message
+	}
+	
+	func bodyString(_ data: Data?) -> String {
+		
+		guard let data else {
+			return "<body is empty>"
+		}
+		
+		guard let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
+			  let jsonData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {
+			return "<parse body to JSON string failed>"
+		}
+		
+		return "Body: " + String(decoding: jsonData, as: UTF8.self)
+	}
+	
+	func headersString(
+		from headers: [AnyHashable: Any]?
+	) -> String {
+		guard let headers,
+				!headers.isEmpty else {
+			return "<empty headers>"
+		}
+		guard let data = try? JSONSerialization.data(withJSONObject: headers, options: .prettyPrinted), // first of all convert json to the data
+			  let convertedString = String(data: data, encoding: .utf8) else { // the data will be converted to the string
+			return "<headers string generation failed>"
+		}
+		
+		return "Headers: " + convertedString
 	}
 }

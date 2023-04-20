@@ -7,6 +7,7 @@
 
 import XCTest
 @testable import SwiftNetworking
+import ReplaceableLogger
 
 final class RegularHostTests: XCTestCase {
 
@@ -22,7 +23,8 @@ final class RegularHostTests: XCTestCase {
 
     func testCreateHostWithoutVar_sendRequest_resultSuccessfullyReceived() async throws {
 		let target = DataTarget("playstation/games")
-		let data = try await RegularHost("api.sampleapis.com").send(target)
+		let data = try await RegularHost("api.sampleapis.com", logger: DefaultLogger(.verbose, commonPrefix: "#####"))
+			.send(target)
 		let responseString = String(data: data, encoding: .utf8)!
 		XCTAssert(!responseString.isEmpty)
     }

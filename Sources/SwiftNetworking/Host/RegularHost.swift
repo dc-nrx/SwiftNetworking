@@ -64,6 +64,7 @@ private extension RegularHost {
 		do {
 			logger?.event(.sending(urlRequest, previousErrors))
 			let (data, response) = try await session.data(for: urlRequest)
+			//TODO: throw error on 4xx / 5xx
 			logger?.event(.responseRecieved(data, response))
 			return try target.mapResponseData(data)
 		} catch {
