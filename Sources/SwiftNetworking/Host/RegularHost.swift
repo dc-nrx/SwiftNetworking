@@ -29,7 +29,7 @@ open class RegularHost: Host {
 		requestPreprocessor: RequestPreprocessor? = nil,
 		errorHandler: ErrorHandler? = nil,
 		session: URLSession = .shared,
-		logger: Logger? = DefaultLogger(commonPrefix: "🌐")
+		logger: Logger? = DefaultLogger(commonPrefix: "📡")
 	) {
 		self.protocolName = protocolName
 		self.address = address
