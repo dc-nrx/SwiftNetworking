@@ -44,7 +44,7 @@ public class HostMock: SwiftNetworking.Host {
 		if let error = mockedResponse.error {
 			throw error
 		} else {
-			return try target.mapResponseData(mockedResponse.body)
+			return try target.responseDataMapper(mockedResponse.body)
 		}
 	}
 		

@@ -17,7 +17,7 @@ public struct PlainTarget: Target {
 	public var query: Query?
 	public var headers: Headers?
 	
-	public var mapResponseData: (Data) throws -> () = { _ in () }
+	public var responseDataMapper: (Data) throws -> () = { _ in () }
 	
 	public init(
 		_ path: String,

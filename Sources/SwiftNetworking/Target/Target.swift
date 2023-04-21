@@ -11,7 +11,7 @@ public enum HTTPMethod: String {
 }
 
 /// The main model item used a source to create url request.
-public protocol Target: CustomStringConvertible {
+public protocol Target {
 
 	associatedtype Response = ()
 	typealias ResponseDataMapper = (Data) throws -> Response
@@ -25,6 +25,6 @@ public protocol Target: CustomStringConvertible {
 	var headers: Headers? { get set }
 	
 	/// The parsing closure. Has default implementation in `DecodableTarget`,  `DataTarget` and `PlainTarget`.
-	var mapResponseData: ResponseDataMapper { get }
+	var responseDataMapper: ResponseDataMapper { get }
 }
  

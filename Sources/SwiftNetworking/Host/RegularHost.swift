@@ -11,6 +11,7 @@ import ReplaceableLogger
 public enum RegularHostError: Error {
 	case recoveryFromResponseErrorsFailed([Error])
 	case attemptToRecoverWithEmptyErrorsList
+	case httpStatusError(Data, HTTPURLResponse)
 }
 
 open class RegularHost: Host {
@@ -64,9 +65,9 @@ private extension RegularHost {
 		do {
 			logger?.event(.sending(urlRequest, previousErrors))
 			let (data, response) = try await session.data(for: urlRequest)
-			//TODO: throw error on 4xx / 5xx
+			try verifyResponseCodeSuccessfull(data: data, response: response)
 			logger?.event(.responseRecieved(data, response))
-			return try target.mapResponseData(data)
+			return try target.responseDataMapper(data)
 		} catch {
 			let extendedErrors = previousErrors.appending(error)
 			if !previousErrors.contains(where: { $0 == error }) {
@@ -95,4 +96,10 @@ private extension RegularHost {
 		return request
 	}
 
+	func verifyResponseCodeSuccessfull(data: Data, response: URLResponse) throws {
+		if let httpResponse = response as? HTTPURLResponse,
+		   400...599 ~= httpResponse.statusCode {
+			throw RegularHostError.httpStatusError(data, httpResponse)
+		}
+	}
 }

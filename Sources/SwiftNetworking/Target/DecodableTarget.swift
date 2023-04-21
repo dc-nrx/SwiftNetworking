@@ -17,7 +17,7 @@ public struct DecodableTarget<T: Decodable>: Target {
 	public var query: Query?
 	public var headers: Headers?
 	
-	public var mapResponseData: ResponseDataMapper
+	public var responseDataMapper: ResponseDataMapper
 	
 	public init(
 		_ path: String,
@@ -32,6 +32,6 @@ public struct DecodableTarget<T: Decodable>: Target {
 		self.query = query
 		self.body = body
 		self.headers = headers
-		mapResponseData = { try decoder.decode(Response.self, from: $0) }
+		responseDataMapper = { try decoder.decode(Response.self, from: $0) }
 	}
 }
