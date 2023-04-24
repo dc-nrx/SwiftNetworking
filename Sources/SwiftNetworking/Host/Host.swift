@@ -19,7 +19,7 @@ public protocol Host {
 	var requestPreprocessor: RequestPreprocessor? { get }
 	var errorHandler: ErrorHandler? { get }
 	
-	func send<T: Target> (
+	func execute<T: Target> (
 		_ target: T
 	) async throws -> T.Response
 }

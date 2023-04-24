@@ -24,7 +24,7 @@ final class RegularHostTests: XCTestCase {
     func testCreateHostWithoutVar_sendRequest_resultSuccessfullyReceived() async throws {
 		let target = DataTarget("playstation/games")
 		let data = try await RegularHost("api.sampleapis.com")
-			.send(target)
+			.execute(target)
 		let responseString = String(data: data, encoding: .utf8)!
 		XCTAssert(!responseString.isEmpty)
     }

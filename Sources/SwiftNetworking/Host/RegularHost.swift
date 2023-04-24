@@ -48,7 +48,7 @@ open class RegularHost: Host {
 	 
 	 Please see `RequestPreprocessor` and `ErrorHandler` docs for additional details.
 	 */
-	open func send<T: Target> (
+	open func execute<T: Target> (
 		_ target: T
 	) async throws -> T.Response {
 		try await recursiveRequest(target)

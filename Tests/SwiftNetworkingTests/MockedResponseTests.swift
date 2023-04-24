@@ -24,7 +24,7 @@ final class MockedResponseTests: XCTestCase {
 		let target = DataTarget(path)
 		let response = ResponseMock(try Data(jsonName: "Iphone9Info", bundle: .module))
 		sut.mock(response, for: target)
-		let data: Data = try await sut.send(target)
+		let data: Data = try await sut.execute(target)
 		XCTAssertTrue(!data.isEmpty)
 	}
 	
@@ -33,7 +33,7 @@ final class MockedResponseTests: XCTestCase {
 		let target = DataTarget("path")
 		let expectation = expectation(description: "expect call to throw error")
 		do {
-			let _ = try await sut.send(target)
+			let _ = try await sut.execute(target)
 		} catch {
 			if case HostMockError.noMockedDataForTarget(_) = error {
 				expectation.fulfill()

@@ -24,7 +24,7 @@ final class HostMockTests: XCTestCase {
 	func testReturnsDefaultMockResponse() async throws {
 		let responseMock = ResponseMock(Data([1,2,3]))
 		sut.defaultResponseMock = responseMock
-		let responseData = try await sut.send(DataTarget("xxx"))
+		let responseData = try await sut.execute(DataTarget("xxx"))
 		XCTAssertEqual(responseData, responseMock.body)
 	}
 	
@@ -33,7 +33,7 @@ final class HostMockTests: XCTestCase {
 		let target = DataTarget("xxx")
 		sut.defaultResponseMock = nil
 		sut.mock(specificResponseMock, for: target)
-		let responseData = try await sut.send(target)
+		let responseData = try await sut.execute(target)
 		XCTAssertEqual(responseData, specificResponseMock.body)
 	}
 	
@@ -42,7 +42,7 @@ final class HostMockTests: XCTestCase {
 		let target = DataTarget("xxx")
 		sut.mock(specificResponseMock, for: target)
 		sut.defaultResponseMock = ResponseMock(Data([7,7,7]))
-		let responseData = try await sut.send(target)
+		let responseData = try await sut.execute(target)
 		XCTAssertEqual(responseData, specificResponseMock.body)
 	}
 
@@ -53,7 +53,7 @@ final class HostMockTests: XCTestCase {
 		sut.mock(specificResponseMock, for: target)
 		sut.defaultResponseMock = ResponseMock(Data([7,7,7]))
 		let anotherTarget = DataTarget("zzz")
-		let responseData = try await sut.send(anotherTarget)
+		let responseData = try await sut.execute(anotherTarget)
 		XCTAssertEqual(responseData, defaultResponseMock.body)
 	}
 
@@ -63,7 +63,7 @@ final class HostMockTests: XCTestCase {
 			sut.mock(response, for: target)
 		}
 		for (target, responseMock) in pairs {
-			let resposeData = try await sut.send(target)
+			let resposeData = try await sut.execute(target)
 			XCTAssertEqual(resposeData, responseMock.body)
 		}
 	}

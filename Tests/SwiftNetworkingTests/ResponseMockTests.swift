@@ -16,7 +16,7 @@ final class ResponseMockTests: XCTestCase {
 		let mock = try ResponseMock(tailFileName: "little_tail", bundle: Bundle.module)
 		let host = HostMock(defaultResponseMock: mock)
 		let target = DecodableTarget<SampleJsonObject>("any")
-		let result = try await host.send(target)
+		let result = try await host.execute(target)
 		print(result)
 	}
 	
