@@ -21,6 +21,9 @@ public class HostMock: SwiftNetworking.Host {
 	 */
 	public var defaultResponseMock: ResponseMock?
 	
+	/**
+	 Target-specific mocked responses
+	 */
 	private var mockedResponses = [String: ResponseMock]()
 
 	public init(

@@ -25,7 +25,7 @@ public struct DecodableTarget<T: Decodable>: Target {
 		query: Query? = nil,
 		body: Data? = nil,
 		headers: Headers? = nil,
-		decoder: JSONDecoder = JSONDecoder()
+		decoder: JSONDecoder = .custom()
 	) {
 		self.path = path
 		self.method = method
@@ -34,4 +34,18 @@ public struct DecodableTarget<T: Decodable>: Target {
 		self.headers = headers
 		responseDataMapper = { try decoder.decode(Response.self, from: $0) }
 	}
+}
+
+public extension JSONDecoder {
+	
+	static func custom(
+		dateDecoding: JSONDecoder.DateDecodingStrategy = .iso8601,
+		keyDecoding: JSONDecoder.KeyDecodingStrategy = .convertFromSnakeCase
+	) -> JSONDecoder {
+		let result = JSONDecoder()
+		result.dateDecodingStrategy = dateDecoding
+		result.keyDecodingStrategy = keyDecoding
+		return result
+	}
+	
 }

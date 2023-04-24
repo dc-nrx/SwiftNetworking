@@ -38,14 +38,10 @@ internal extension Logger {
 			lg(.debug, construct("\(prefix)Sending \(request.loggerDescription)",
 								 error: nil,
 								 previousErrors: previousErrors))
-//			lg(.verbose, headersString(from: request.allHTTPHeaderFields))
 			lg(.verbose, bodyString(request.httpBody))
 		
 		case .responseRecieved(let data, let response):
 			lg(.debug, "Response received: \(response.loggerDescription) | \(data)")
-//			if let headers = (response as? HTTPURLResponse)?.allHeaderFields {
-//				lg(.verbose, headersString(from: headers))
-//			}
 			lg(.verbose, bodyString(data))
 		
 		case .urlRequestGenerated(let target, let request):
@@ -81,7 +77,7 @@ internal extension Logger {
 			message += " | error: \(error)"
 		}
 		if !previousErrors.isEmpty {
-			message += "\nPREVIOUS ERRORS: \(previousErrors)"
+			message += "\nPREVIOUS ERRORS COUNT: \(previousErrors.count)"
 		}
 		return message
 	}
