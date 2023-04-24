@@ -26,14 +26,14 @@ public class HostMock: SwiftNetworking.Host {
 	public init(
 		mockedResponses: [String: ResponseMock] = [String: ResponseMock](),
 		address: String = "__MOCK__",
-		defaultResponseMock: ResponseMock? = ResponseMock()
+		defaultResponseMock: ResponseMock? = nil
 	) {
 		self.address = address
 		self.mockedResponses = mockedResponses
 		self.defaultResponseMock = defaultResponseMock
 	}
 
-	public func send<T>(_ target: T) async throws -> T.Response where T : Target {
+	public func execute<T>(_ target: T) async throws -> T.Response where T : Target {
 		let mockedResponse: ResponseMock
 		if let specificResponse = mockedResponses[key(for: target)] {
 			mockedResponse = specificResponse
