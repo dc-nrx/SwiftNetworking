@@ -1,0 +1,10 @@
+GET
+https://api.shutterstock.com/v2/notifications\?message_type=contributor-card&page=1&parse_message=json&per_page=10&sort=newest
+200
+Content-Type: application/json
+
+{
+	"sampleIntArray": [1,2,3],
+	"sampleBool": true,
+	"sampleStr": "Strrring"
+}

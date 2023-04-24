@@ -22,3 +22,4 @@ public extension Data {
 		self = try Data(contentsOf: url)
 	}
 }
+

@@ -1,0 +1,305 @@
+GET
+https://api.shutterstock.com/v2/notifications\?message_type=contributor-card&page=1&parse_message=json&per_page=10&sort=newest
+200
+Content-Type: application/json
+
+{
+    "data": [{
+        "active_before": "2018-11-23T00:00:00-05:00",
+        "message_type": "contributor-card",
+        "subject": "Your submission has been reviewed",
+        "message": {
+            "approved_media": [],
+            "version": 1,
+            "total_rejected": 1,
+            "total_approved": 0,
+            "rejected_media": [{
+                "type": "image",
+                "id": "1209280624",
+                "large_thumb": {
+                    "height": 270,
+                    "width": 405,
+                    "url": "https://ak.picdn.net/shutterstock/pending_photos/1377089092/thumb_480x270.jpg"
+                },
+                "description": "Y y c",
+                "reject_reasons": [{
+                    "title": "Title",
+                    "description": "Title must be descriptive of the subject matter and must be in English. Titles cannot contain special characters, spelling/grammar errors, or repeat words/phrases in excess."
+                }, {
+                    "title": "Incorrect Illustration Designation",
+                    "description": "This image cannot be designated as an illustration. Please upload the image and select \"No\" under \"Illust./Clip-Art.\""
+                }]
+            }],
+            "batch_type": "photo",
+            "type": "batch_reviewed"
+        },
+        "created": "2018-10-23T03:59:00-04:00",
+        "recipient_type": "account",
+        "id": "573686357"
+    }, {
+        "active_before": "2018-11-21T00:00:00-05:00",
+        "message_type": "contributor-card",
+        "subject": "Your submission has been reviewed",
+        "message": {
+            "approved_media": [],
+            "version": 1,
+            "total_rejected": 1,
+            "total_approved": 0,
+            "rejected_media": [{
+                "type": "image",
+                "id": "1205301721",
+                "large_thumb": {
+                    "height": 270,
+                    "width": 203,
+                    "url": "https://ak.picdn.net/shutterstock/pending_photos/1377209494/thumb_480x270.jpg"
+                },
+                "description": "Bitte helfen Sie mir",
+                "reject_reasons": [{
+                    "title": "Visible Trademark",
+                    "description": "Image contains visible brand names or logos."
+                }, {
+                    "title": "Title",
+                    "description": "Title must be descriptive of the subject matter and must be in English. Titles cannot contain special characters, spelling/grammar errors, or repeat words/phrases in excess."
+                }]
+            }],
+            "batch_type": "photo",
+            "type": "batch_reviewed"
+        },
+        "created": "2018-10-21T12:59:54-04:00",
+        "recipient_type": "account",
+        "id": "571868657"
+    }, {
+        "active_before": "2018-11-21T00:00:00-05:00",
+        "message_type": "contributor-card",
+        "subject": "Your submission has been reviewed",
+        "message": {
+            "approved_media": [],
+            "version": 1,
+            "total_rejected": 1,
+            "total_approved": 0,
+            "rejected_media": [{
+                "type": "image",
+                "id": "1205263492",
+                "large_thumb": {
+                    "height": 270,
+                    "width": 203,
+                    "url": "https://ak.picdn.net/shutterstock/pending_photos/1377140026/thumb_480x270.jpg"
+                },
+                "description": "Tbh ju jh",
+                "reject_reasons": [{
+                    "title": "Title",
+                    "description": "Title must be descriptive of the subject matter and must be in English. Titles cannot contain special characters, spelling/grammar errors, or repeat words/phrases in excess."
+                }, {
+                    "title": "Keywords",
+                    "description": "Keywords must be descriptive of the subject matter and must be in English. Keywords cannot contain special characters, spelling/grammar errors, or repeat words/phrases in excess."
+                }]
+            }],
+            "batch_type": "photo",
+            "type": "batch_reviewed"
+        },
+        "created": "2018-10-21T12:59:54-04:00",
+        "recipient_type": "account",
+        "id": "571868654"
+    }, {
+        "active_before": "2018-11-18T00:00:00-05:00",
+        "message_type": "contributor-card",
+        "subject": "Your submission has been reviewed",
+        "message": {
+            "approved_media": [],
+            "version": 1,
+            "total_rejected": 1,
+            "total_approved": 0,
+            "rejected_media": [{
+                "type": "image",
+                "id": "1205367355",
+                "large_thumb": {
+                    "height": 270,
+                    "width": 405,
+                    "url": "https://ak.picdn.net/shutterstock/pending_photos/1377089188/thumb_480x270.jpg"
+                },
+                "description": "Y y c",
+                "reject_reasons": [{
+                    "title": "Unacceptable Editorial Caption",
+                    "description": "Editorial captions must describe the subject matter (who, what, where, when) and must be in English. Editorial captions cannot contain special characters or repeat words/phrases in excess."
+                }, {
+                    "title": "Altered Editorial",
+                    "description": "Post-production alterations to editorial content, such as adding or removing objects from a scene, are unacceptable."
+                }]
+            }],
+            "batch_type": "photo",
+            "type": "batch_reviewed"
+        },
+        "created": "2018-10-18T13:15:32-04:00",
+        "recipient_type": "account",
+        "id": "569268050"
+    }, {
+        "active_before": "2018-11-18T00:00:00-05:00",
+        "message_type": "contributor-card",
+        "subject": "Your submission has been reviewed",
+        "message": {
+            "approved_media": [],
+            "version": 1,
+            "total_rejected": 1,
+            "total_approved": 0,
+            "rejected_media": [{
+                "type": "image",
+                "id": "1205197621",
+                "large_thumb": {
+                    "height": 270,
+                    "width": 360,
+                    "url": "https://ak.picdn.net/shutterstock/pending_photos/1362329857/thumb_480x270.jpg"
+                },
+                "description": "Y m c",
+                "reject_reasons": [{
+                    "title": "Unacceptable Editorial Caption",
+                    "description": "Editorial captions must describe the subject matter (who, what, where, when) and must be in English. Editorial captions cannot contain special characters or repeat words/phrases in excess."
+                }, {
+                    "title": "Exposure",
+                    "description": "Image is extremely underexposed or overexposed."
+                }]
+            }],
+            "batch_type": "photo",
+            "type": "batch_reviewed"
+        },
+        "created": "2018-10-18T13:15:32-04:00",
+        "recipient_type": "account",
+        "id": "569268047"
+    }, {
+        "active_before": "2018-11-13T00:00:00-05:00",
+        "message_type": "contributor-card",
+        "subject": "Your submission has been reviewed",
+        "message": {
+            "approved_media": [],
+            "version": 1,
+            "total_rejected": 1,
+            "total_approved": 0,
+            "rejected_media": [{
+                "type": "image",
+                "id": "1199432875",
+                "large_thumb": {
+                    "height": 270,
+                    "width": 152,
+                    "url": "https://ak.picdn.net/shutterstock/pending_photos/1367680060/thumb_480x270.jpg"
+                },
+                "description": "bsh nssj nsk",
+                "reject_reasons": [{
+                    "title": "Title",
+                    "description": "Title must be descriptive of the subject matter and must be in English. Titles cannot contain special characters, spelling/grammar errors, or repeat words/phrases in excess."
+                }, {
+                    "title": "Visible Trademark",
+                    "description": "Image contains visible brand names or logos."
+                }, {
+                    "title": "Noise / Artifacts / Film Grain",
+                    "description": "Image contains excessive noise, film grain, compression artifacts, and/or posterization."
+                }, {
+                    "title": "Composition",
+                    "description": "Distracting elements are entering the frame obscuring the main subject or the horizon line is unintentionally crooked/skewed."
+                }]
+            }],
+            "batch_type": "photo",
+            "type": "batch_reviewed"
+        },
+        "created": "2018-10-13T11:53:07-04:00",
+        "recipient_type": "account",
+        "id": "563666855"
+    }, {
+        "active_before": "2018-11-13T00:00:00-05:00",
+        "message_type": "contributor-card",
+        "subject": "Your submission has been reviewed",
+        "message": {
+            "approved_media": [],
+            "version": 1,
+            "total_rejected": 1,
+            "total_approved": 0,
+            "rejected_media": [{
+                "type": "image",
+                "id": "1198742401",
+                "large_thumb": {
+                    "height": 270,
+                    "width": 203,
+                    "url": "https://ak.picdn.net/shutterstock/pending_photos/1361324512/thumb_480x270.jpg"
+                },
+                "description": "Time is money",
+                "reject_reasons": [{
+                    "title": "Intellectual Property",
+                    "description": "Image potentially infringes on another person's intellectual property rights (e.g., image contains artwork, writing, sheet music, or objects protected by copyright)."
+                }, {
+                    "title": "Artwork Property Release",
+                    "description": "Works of art, such as paintings and drawings, require a property release from the artist of the work. On the release, please include a thumbnail of the original artwork."
+                }]
+            }],
+            "batch_type": "photo",
+            "type": "batch_reviewed"
+        },
+        "created": "2018-10-13T11:53:07-04:00",
+        "recipient_type": "account",
+        "id": "563666852"
+    }, {
+        "active_before": "2018-11-11T00:00:00-05:00",
+        "message_type": "contributor-card",
+        "subject": "Your submission has been reviewed",
+        "message": {
+            "approved_media": [],
+            "version": 1,
+            "total_rejected": 1,
+            "total_approved": 0,
+            "rejected_media": [{
+                "type": "image",
+                "id": "1199433616",
+                "large_thumb": {
+                    "height": 270,
+                    "width": 152,
+                    "url": "https://ak.picdn.net/shutterstock/pending_photos/1367674798/thumb_480x270.jpg"
+                },
+                "description": "gag bab bsb",
+                "reject_reasons": [{
+                    "title": "Unacceptable Editorial Caption",
+                    "description": "Editorial captions must describe the subject matter (who, what, where, when) and must be in English. Editorial captions cannot contain special characters or repeat words/phrases in excess."
+                }, {
+                    "title": "Focus",
+                    "description": "The main subject of this image is not in focus."
+                }, {
+                    "title": "Exposure",
+                    "description": "Image is extremely underexposed or overexposed."
+                }]
+            }],
+            "batch_type": "photo",
+            "type": "batch_reviewed"
+        },
+        "created": "2018-10-11T18:24:38-04:00",
+        "recipient_type": "account",
+        "id": "561906074"
+    }, {
+        "active_before": "2018-11-04T20:49:31-05:00",
+        "message_type": "contributor-card",
+        "subject": "Your submission has been reviewed",
+        "message": {
+            "batch_id": "417741853",
+            "approved_media": [],
+            "version": 1,
+            "total_rejected": 1,
+            "total_approved": 0,
+            "rejected_media": [{
+                "reject_reasons": [{
+                    "title": "Title",
+                    "id": 82,
+                    "description": "Titles must be in English, may not contain unnecessary information and must relate to the image."
+                }],
+                "type": "image",
+                "id": "1192575046",
+                "large_thumb": {
+                    "width": 150,
+                    "url": "https://ak.picdn.net/shutterstock/pending_photos/1354909048/thumb.jpg",
+                    "height": 113
+                },
+                "description": "h n m"
+            }],
+            "batch_type": "photo",
+            "type": "batch_reviewed"
+        },
+        "created": "2018-10-05T20:49:31-04:00",
+        "recipient_type": "account",
+        "id": "555562976"
+    }],
+    "total_count": 9
+}

@@ -96,9 +96,12 @@ private extension RegularHost {
 		return request
 	}
 
-	func verifyResponseCodeSuccessfull(data: Data, response: URLResponse) throws {
+	func verifyResponseCodeSuccessfull(
+		data: Data,
+		response: URLResponse
+	) throws {
 		if let httpResponse = response as? HTTPURLResponse,
-		   400...599 ~= httpResponse.statusCode {
+		   !(100..<400 ~= httpResponse.statusCode) {
 			throw RegularHostError.httpStatusError(data, httpResponse)
 		}
 	}
