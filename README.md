@@ -10,7 +10,7 @@ It simplifies the process of making network requests and handling responses by a
 - **Built for Swift**: Is built specifically for Swift, leveraging Swift's modern features.
 - **Fine-tuned for refactor**: Easily compatible with legacy networking components (see Sample Usage).
 - **Highly customizable**: Can be customized to suit your needs, allowing for greater flexibility and control.
-- **Light-weight**: The framework is based on 4 protocols, with a few very concise default implementations.
+- **Lightweight**: The framework is based on 4 protocols, with a few very concise default implementations.
 
 ## Installation
 
