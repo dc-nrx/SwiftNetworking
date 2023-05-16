@@ -40,14 +40,19 @@ The framework is based on 2 core protocols (`Host` and `Target`), and 2 addition
 ### Target
 
 A `Target` represents an endpoint. In addition to the data necessary for making request (such as method, path, body etc.), it incapsulates the parsing logic.
+
 The default implementations cover `Decodable`, `Data` and empty response cases.
+
 The corresponding types are `DecodableTarget`, `DataTarget` and `PlainTarget`. They also may be used as a reference for custom `Target` types implementation.
 
 ### Host
 
 A `Host` represents... well, a host. It's single function is to execute requests represented by `Target`s. In order to do so, it can use a custom URLSession. 
+
 It also has optional `RequestPreprocessor` and `ErrorHandler`. The common use for the first is adding common headers (such as `Authorization`) to each request. The second can be used to recover from common errors (such as refresh of expired token).
+
 The default implementation `RegularHost` uses both of them. In case `ErrorHandler` is able to hadle an error, it is given a chanse to do so, and the request is re-sent once again.
+
 `RegularHost` also provides extensive multi-level logging. The default light-weigh logger does the job well enough, but should you need to use a more serious solution - it can be conformed to a single-method protocol and injected via `RegularHost` initializer.
 
 ## Further plans:
