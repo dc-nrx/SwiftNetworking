@@ -40,10 +40,10 @@ let games = try await host.execute(target)
 
 ## Legacy Codebase Refactor
 
-Assuming there is some legacy `SessionManager` class, it can be conformed to both `ErrorHandler` & `RequestPreprocessor` protocols as follows:
+Assuming there is some legacy `NetworkManager` class, it can be conformed to both `ErrorHandler` & `RequestPreprocessor` protocols as follows:
 
 ```swift
-extension SessionManager: ErrorHandler & RequestPreprocessor {
+extension NetworkManager: ErrorHandler & RequestPreprocessor {
 
     public func preprocess(_ target: inout some SwiftNetworking.Target) {
         var headers = [
@@ -68,7 +68,7 @@ extension SessionManager: ErrorHandler & RequestPreprocessor {
 and then injected to a host on initialization:
 
 ```swift
-let host = RegularHost("api.sampleapis.com", requestPreprocessor: sessionManager, errorHandler: sessionManager)
+let host = RegularHost("api.sampleapis.com", requestPreprocessor: networkManager, errorHandler: networkManager)
 ```
 
 This way, there will be a single source of networking-related data, eliminating any risks of inconsistency.
