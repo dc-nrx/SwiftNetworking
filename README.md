@@ -6,10 +6,10 @@ It simplifies the process of making network requests and handling responses by a
 
 ## Features
 
-- **Easy-to-use API**: SwiftNetworking provides a simple and intuitive API for making network requests.
-- **Built for Swift**: SwiftNetworking is built specifically for Swift, leveraging Swift's modern features.
+- **Easy-to-use API**: Provides a simple and intuitive API for making network requests.
+- **Built for Swift**: Is built specifically for Swift, leveraging Swift's modern features.
 - **Fine-tuned for refactor**: Easily compatible with legacy networking components (see Sample Usage).
-- **Highly customizable**: SwiftNetworking can be customized to suit your needs, allowing for greater flexibility and control.
+- **Highly customizable**: Can be customized to suit your needs, allowing for greater flexibility and control.
 - **Light-weight**: The framework is based on 4 protocols, with a few very concise default implementations.
 
 ## Installation
@@ -40,10 +40,11 @@ let games = try await host.execute(target)
 
 ## Legacy Codebase Refactor
 
-Assuming there is some legacy `SessionManager` class, it can be conformed to both `ErrorHandler` & `RequestPreprocessor` protocols as follows
+Assuming there is some legacy `SessionManager` class, it can be conformed to both `ErrorHandler` & `RequestPreprocessor` protocols as follows:
 
 ```swift
 extension SessionManager: ErrorHandler & RequestPreprocessor {
+
     public func preprocess(_ target: inout some SwiftNetworking.Target) {
         var headers = [
             "Authorization": authManager.token
@@ -70,11 +71,13 @@ and then injected to a host on initialization:
 let host = RegularHost("api.sampleapis.com", requestPreprocessor: sessionManager, errorHandler: sessionManager)
 ```
 
-This way, there would be a singe source of networking-related data, which eliminates any risks of inconsistency.
+This way, there will be a single source of networking-related data, eliminating any risks of inconsistency.
 
 ## Architecture
 
-The framework is based on 2 core protocols (`Host` and `Target`), and 2 additional ones (`RequestPreprocessor` and `ErrorHandler`). Also, it offers a few default implementations that cover the most common scenarios.
+The framework is based on 2 core protocols (`Host` and `Target`), and 2 additional ones (`RequestPreprocessor` and `ErrorHandler`).
+
+Also, it offers a few default implementations that cover the most common scenarios.
 
 ### Target
 
@@ -86,7 +89,7 @@ The corresponding types are `DecodableTarget`, `DataTarget` and `PlainTarget`. T
 
 ### Host
 
-A `Host` represents... a host. It's single function is to execute requests represented by `Target`s. In order to do so, it can use a custom URLSession. 
+A `Host` represents... a host. Its single function is to execute requests represented by `Target`s. In order to do so, it can use a custom URLSession. 
 
 It also has optional `RequestPreprocessor` and `ErrorHandler`. The common use for the first is adding standard headers (such as `Authorization`) to each request. The second can be used to recover from common errors (such as expired token).
 
