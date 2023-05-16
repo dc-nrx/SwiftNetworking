@@ -44,24 +44,24 @@ Assuming there is some legacy `SessionManager` class, it can be conformed to bot
 
 ```swift
 extension SessionManager: ErrorHandler & RequestPreprocessor {
-
-	public func preprocess(_ target: inout some SwiftNetworking.Target, rewriteExistedData: Bool) {
-		var headers = [
-			"Authorization": authManager.token
-      //...
-		]
-    target.headers = (target.headers ?? [:]).merging(headers, uniquingKeysWith: { $1 })
-	}
-
-	public func handle(error: Error) async throws {
-    if error == .tokenExpired {
-      try await authManager.refreshToken()
+    public func preprocess(_ target: inout some SwiftNetworking.Target) {
+        var headers = [
+            "Authorization": authManager.token
+            //...
+        ]
+        target.headers = (target.headers ?? [:]).merging(headers, uniquingKeysWith: { $1 })
     }
-	
-	public func canHandle(error: Error) -> Bool {
-    error == .tokenExpired 
-	}
 
+    public func handle(error: Error) async throws {
+        if error == .tokenExpired {
+            try await authManager.refreshToken()
+        }
+    }
+
+    public func canHandle(error: Error) -> Bool {
+        return error == .tokenExpired 
+    }
+}
 ```
 
 and then injected to a host on initialization:
