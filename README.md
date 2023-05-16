@@ -100,3 +100,4 @@ The default implementation `RegularHost` uses both of them. In case `ErrorHandle
 ## Further plans:
 - Multipart data support
 - Request post-processing
+- Prioritized requests queue
