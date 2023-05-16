@@ -101,3 +101,6 @@ The default implementation `RegularHost` uses both of them. In case `ErrorHandle
 - Multipart data support
 - Request post-processing
 - Prioritized requests queue
+
+## License
+SwiftNetworking is licensed under the MIT License.
