@@ -16,8 +16,8 @@ let package = Package(
 			targets: ["SwiftNetworkingMocks"]),
     ],
     dependencies: [
-		.package(url: "https://github.com/dc-nrx/ReplaceableLogger.git", from: "0.1.4"),
-		.package(url: "https://github.com/dc-nrx/SwiftSerialize.git", from: "0.1.0"),
+		.package(url: "https://github.com/dc-nrx/ReplaceableLogger.git", .upToNextMinor(from: "0.1.4")),
+		.package(url: "https://github.com/dc-nrx/SwiftSerialize.git", .upToNextMinor(from: "0.1.0")),
 	],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
