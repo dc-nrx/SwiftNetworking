@@ -5,8 +5,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dc-nrx/ReplaceableLogger.git",
       "state" : {
-        "revision" : "b2099f13b9e1f3caed6c62e6fe6d4eff3ac6eca3",
-        "version" : "0.1.3"
+        "revision" : "36958662b5b3d3cbf21d0ae519e886a69cba31c0",
+        "version" : "0.1.5"
+      }
+    },
+    {
+      "identity" : "swiftserialize",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dc-nrx/SwiftSerialize.git",
+      "state" : {
+        "revision" : "1fc88dc6b34d45ef29b25c67e8d417b92b307adf",
+        "version" : "0.1.0"
       }
     }
   ],
