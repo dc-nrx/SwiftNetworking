@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dc-nrx/SwiftSerialize.git",
       "state" : {
-        "revision" : "d03e68c6c24720b91a783b7b38c50d2af025e83a",
-        "version" : "0.2.0"
+        "revision" : "1fc88dc6b34d45ef29b25c67e8d417b92b307adf",
+        "version" : "0.1.0"
       }
     }
   ],
