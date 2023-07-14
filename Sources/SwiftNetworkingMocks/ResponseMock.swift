@@ -36,12 +36,10 @@ public struct ResponseMock {
 		}
 		let jsonString = String(str[bodyStartIdx...])
 		
-		let utf8 = jsonString.utf8
 		let dataUtf8 = jsonString.data(using: .utf8)
 		
 		
-//		let encoder = JSONEncoder()
-		self.body = dataUtf8!//try encoder.encode(jsonString)
+		self.body = dataUtf8!
 		self.error = nil
 	}
 }
