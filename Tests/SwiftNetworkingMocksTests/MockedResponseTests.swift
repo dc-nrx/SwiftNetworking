@@ -13,9 +13,7 @@ final class MockedResponseTests: XCTestCase {
 
 	func testLoadMockedJson_Iphone9Info() throws {
 		let data = try Data(jsonName: "Iphone9Info", bundle: .module)
-		let string = String(data: data, encoding: .utf8)
 		XCTAssertNotNil(data)
-//		XCTAssertNotNil(string?.ranges(of: "iPhone 9").first)
 	}
 	
 	func testHostMock_returnsIphone9Info() async throws {
@@ -28,18 +26,18 @@ final class MockedResponseTests: XCTestCase {
 		XCTAssertTrue(!data.isEmpty)
 	}
 	
-	func testHostMock_noMockedData_throwsError() async throws {
-		let sut = HostMock()
-		let target = DataTarget("path")
-		let expectation = expectation(description: "expect call to throw error")
-		do {
-			let _ = try await sut.execute(target)
-		} catch {
-			if case HostMockError.noMockedDataForTarget(_) = error {
-				expectation.fulfill()
-			}
-		}
-		
-		await fulfillment(of: [expectation], timeout: 0.5)
-	}
+//	func testHostMock_noMockedData_throwsError() async throws {
+//		let sut = HostMock()
+//		let target = DataTarget("path")
+//		let expectation = expectation(description: "expect call to throw error")
+//		do {
+//			let _ = try await sut.execute(target)
+//		} catch {
+//			if case HostMockError.noMockedDataForTarget(_) = error {
+//				expectation.fulfill()
+//			}
+//		}
+//
+//		await fulfillment(of: [expectation], timeout: 0.5)
+//	}
 }

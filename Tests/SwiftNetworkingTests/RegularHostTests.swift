@@ -7,7 +7,6 @@
 
 import XCTest
 @testable import SwiftNetworking
-import ReplaceableLogger
 
 final class RegularHostTests: XCTestCase {
 
@@ -21,12 +20,12 @@ final class RegularHostTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testCreateHostWithoutVar_sendRequest_resultSuccessfullyReceived() async throws {
+//    func testCreateHostWithoutVar_sendRequest_resultSuccessfullyReceived() async throws {
 //		let target = DataTarget("playstation/games")
 //		let data = try await RegularHost("api.sampleapis.com")
 //			.execute(target)
 //		let responseString = String(data: data, encoding: .utf8)!
 //		XCTAssert(!responseString.isEmpty)
-    }
+//    }
 
 }

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import ReplaceableLogger
 
 internal protocol LoggerDescritpionProvider {
 

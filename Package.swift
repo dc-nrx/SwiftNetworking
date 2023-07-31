@@ -7,7 +7,6 @@ let package = Package(
     name: "SwiftNetworking",
 	platforms: [.iOS(.v15), .macOS(.v13)],
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "SwiftNetworking",
             targets: ["SwiftNetworking"]),
@@ -16,15 +15,12 @@ let package = Package(
 			targets: ["SwiftNetworkingMocks"]),
     ],
     dependencies: [
-		.package(url: "https://github.com/dc-nrx/ReplaceableLogger.git", .upToNextMinor(from: "0.1.5")),
 		.package(url: "https://github.com/dc-nrx/SwiftSerialize.git", .upToNextMinor(from: "0.2.0")),
 	],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
 			name: "SwiftNetworking",
-			dependencies: ["ReplaceableLogger", "SwiftSerialize"]
+			dependencies: ["SwiftSerialize"]
 		),
 		.target(
 			name: "SwiftNetworkingMocks",

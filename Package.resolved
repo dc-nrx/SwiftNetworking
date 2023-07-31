@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "replaceablelogger",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/dc-nrx/ReplaceableLogger.git",
-      "state" : {
-        "revision" : "36958662b5b3d3cbf21d0ae519e886a69cba31c0",
-        "version" : "0.1.5"
-      }
-    },
-    {
       "identity" : "swiftserialize",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dc-nrx/SwiftSerialize.git",

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ReplaceableLogger
+import OSLog
 
 internal enum LoggerEvent {
 
@@ -28,8 +28,8 @@ internal extension Logger {
 		function: String = #function,
 		line: Int = #line
 	) {
-		let lg: (LogLevel, @autoclosure ()->String) -> () = { level, message in
-			log(level, message(), file: file, function: function, line: line)
+		let lg: (OSLogType, String) -> () = { level, message in
+			log(level: level, "\(message)")
 		}
 		switch event {
 			
@@ -38,20 +38,20 @@ internal extension Logger {
 			lg(.debug, construct("\(prefix)Sending \(request.loggerDescription)",
 								 error: nil,
 								 previousErrors: previousErrors))
-			lg(.verbose, bodyString(request.httpBody))
+			lg(.info, bodyString(request.httpBody))
 		
 		case .responseRecieved(let data, let response):
 			lg(.debug, "Response received: \(response.loggerDescription) | \(data)")
-			lg(.verbose, bodyString(data))
+			lg(.info, bodyString(data))
 		
 		case .urlRequestGenerated(let target, let request):
-			lg(.verbose, "URL Request from target \(target) generated: \(request)")
+			lg(.info, "URL Request from target \(target) generated: \(request)")
 		
 		case .preprocess(let target, let preprocessor):
-			lg(.verbose, "Target \(target) preprocessing started with \(preprocessor)")
+			lg(.info, "Target \(target) preprocessing started with \(preprocessor)")
 		
 		case .errorResolutionStarted(let error, let previousErrors):
-			lg(.warning, construct("Error resolution started",
+			lg(.debug, construct("Error resolution started",
 								 error: error,
 								 previousErrors: previousErrors))
 		

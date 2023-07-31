@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ReplaceableLogger
+import OSLog
 
 public enum RegularHostError: Error {
 	case recoveryFromResponseErrorsFailed([Error])
@@ -22,22 +22,21 @@ open class RegularHost: Host {
 
 	public var requestPreprocessor: RequestPreprocessor?
 	public var errorHandler: ErrorHandler?
-	public var logger: Logger?
+	
+	private let logger = Logger(subsystem: "Networking", category: "RegularHost")
 	
 	public init(
 		protocolName: String = "https",
 		_ address: String,
 		requestPreprocessor: RequestPreprocessor? = nil,
 		errorHandler: ErrorHandler? = nil,
-		session: URLSession = .shared,
-		logger: Logger? = DefaultLogger(commonPrefix: "📡")
+		session: URLSession = .shared
 	) {
 		self.protocolName = protocolName
 		self.address = address
 		self.requestPreprocessor = requestPreprocessor
 		self.errorHandler = errorHandler
 		self.session = session
-		self.logger = logger
 	}
 	
 	/**
@@ -63,20 +62,20 @@ private extension RegularHost {
 	) async throws -> T.Response {
 		let urlRequest = try preprocessedUrlRequest(from: target)
 		do {
-			logger?.event(.sending(urlRequest, previousErrors))
+			logger.event(.sending(urlRequest, previousErrors))
 			let (data, response) = try await session.data(for: urlRequest)
 			try verifyResponseCodeSuccessfull(data: data, response: response)
-			logger?.event(.responseRecieved(data, response))
+			logger.event(.responseRecieved(data, response))
 			return try target.responseDataMapper(data)
 		} catch {
 			let extendedErrors = previousErrors.appending(error)
 			if !previousErrors.contains(where: { $0 == error }) {
-				logger?.event(.errorResolutionStarted(error, previousErrors))
+				logger.event(.errorResolutionStarted(error, previousErrors))
 				try await errorHandler?.handle(error: error)
-				logger?.event(.errorResolutionFinished(error, previousErrors))
+				logger.event(.errorResolutionFinished(error, previousErrors))
 				return try await recursiveRequest(target, previousErrors: extendedErrors)
 			} else {
-				logger?.event(.unhandeledErrorOccured(error, previousErrors))
+				logger.event(.unhandeledErrorOccured(error, previousErrors))
 				throw previousErrors.isEmpty ? error : RegularHostError.recoveryFromResponseErrorsFailed(extendedErrors)
 			}
 		}
@@ -87,12 +86,12 @@ private extension RegularHost {
 	) throws -> URLRequest {
 		var signedTarget = target
 		if let preprocessor = requestPreprocessor {
-			logger?.event(.preprocess(preprocessor, target))
+			logger.event(.preprocess(preprocessor, target))
 			preprocessor.preprocess(&signedTarget)
 		}
 		let baseUrlString = protocolName + "://" + address
 		let request = try URLRequest(baseUrl: baseUrlString, signedTarget)
-		logger?.event(.urlRequestGenerated(signedTarget, request))
+		logger.event(.urlRequestGenerated(signedTarget, request))
 		return request
 	}
 
