@@ -91,7 +91,7 @@ It also has optional `RequestPreprocessor` and `ErrorHandler`. The common use fo
 
 The default implementation `RegularHost` uses both of them. In case `ErrorHandler` is able to hadle an error, it is given a chanse to, and the request is re-sent once again.
 
-`RegularHost` also provides extensive multi-level logging. The default light-weigh logger does the job well enough, but should you need to use a more serious solution - it can be conformed to a single-method protocol and injected via `RegularHost` initializer.
+`RegularHost` also provides extensive multi-level logging via the standard swift `Logger` from `OSLog` framework.
 
 ## Further plans:
 - Multipart data support
