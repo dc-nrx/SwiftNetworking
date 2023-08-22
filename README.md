@@ -14,14 +14,10 @@ It simplifies the process of making network requests and handling responses by a
 
 ## Installation
 
-Here's how you can add SwiftNetworking to your Swift project.
-
-### Swift Package Manager
-
 You can install SwiftNetworking via the Swift Package Manager by adding the following line to your `Package.swift` file's dependencies:
 
 ```swift
-.package(url: "https://github.com/dc-nrx/SwiftNetworking.git", from: "0.4.0")
+.package(url: "https://github.com/dc-nrx/SwiftNetworking.git", from: "0.6.0")
 ```
 ## Sample Usage
 
