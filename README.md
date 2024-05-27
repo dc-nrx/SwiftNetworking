@@ -14,14 +14,10 @@ It simplifies the process of making network requests and handling responses by a
 
 ## Installation
 
-Here's how you can add SwiftNetworking to your Swift project.
-
-### Swift Package Manager
-
 You can install SwiftNetworking via the Swift Package Manager by adding the following line to your `Package.swift` file's dependencies:
 
 ```swift
-.package(url: "https://github.com/dc-nrx/SwiftNetworking.git", from: "0.4.0")
+.package(url: "https://github.com/dc-nrx/SwiftNetworking.git", from: "0.6.0")
 ```
 ## Sample Usage
 
@@ -95,7 +91,7 @@ It also has optional `RequestPreprocessor` and `ErrorHandler`. The common use fo
 
 The default implementation `RegularHost` uses both of them. In case `ErrorHandler` is able to hadle an error, it is given a chanse to, and the request is re-sent once again.
 
-`RegularHost` also provides extensive multi-level logging. The default light-weigh logger does the job well enough, but should you need to use a more serious solution - it can be conformed to a single-method protocol and injected via `RegularHost` initializer.
+`RegularHost` also provides extensive multi-level logging via the standard swift `Logger` from `OSLog` framework.
 
 ## Further plans:
 - Multipart data support
