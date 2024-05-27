@@ -21,7 +21,9 @@ public extension URLRequest {
 			
 		var headers = target.headers ?? [:]
 		if target.body != nil,
-			headers[contentTypeKey] != nil {
+           headers[contentTypeKey] == nil,
+           headers[contentTypeKey]?.lowercased() == nil,
+           headers[contentTypeKey]?.lowercased().capitalized == nil {
 			headers[contentTypeKey] = contentTypeJson
 		}
 		
