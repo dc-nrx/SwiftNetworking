@@ -12,7 +12,7 @@ import Foundation
  A collection of useful request handlers: unconditional error, specific status code etc.
  Can be extended if needed.
  */
-enum RequestHandler {
+public enum RequestHandler {
     case error(Error)
     case closure((URLRequest) -> (URLResponse, Data?))
     case stub(URLResponse, Data?)
@@ -38,10 +38,14 @@ enum RequestHandler {
     }
 }
 
-typealias RequestSpy = (URLRequest) -> ()
+public typealias RequestSpy = (URLRequest) -> ()
 
 /**
  The only reasonable way inject a mock URLSession.
+ 
+ 
+ Can be accessed as described below, or via a shortcut ``URLSession.mock``
+ 
  
  **Sample usage**
  
@@ -70,21 +74,21 @@ typealias RequestSpy = (URLRequest) -> ()
  ```
 
  */
-class MockURLProtocol: URLProtocol {
+public class MockURLProtocol: URLProtocol {
 
     /**
      Handler to process the request and return mock response.
      
      While using `static` is not the best way to go, it still is a reasonable tradeoff in the current case.
      */
-    static var requestHandler: RequestHandler?
+    public static var requestHandler: RequestHandler?
 
     /**
      Handler to conveniently test the request before executing `requestHandler`.
      */
-    static var requestSpy: RequestSpy?
-    
-    override func startLoading() {
+    public static var requestSpy: RequestSpy?
+        
+    override public func startLoading() {
         guard let handler = MockURLProtocol.requestHandler else {
             fatalError("Handler is unavailable")
         }
@@ -104,14 +108,22 @@ class MockURLProtocol: URLProtocol {
         }
     }
     
-    override class func canInit(with request: URLRequest) -> Bool {
+    override public class func canInit(with request: URLRequest) -> Bool {
         MockURLProtocol.requestSpy?(request)
         return true
     }
 
-    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+    override public class func canonicalRequest(for request: URLRequest) -> URLRequest {
         request
     }
     
-    override func stopLoading() { }
+    override public func stopLoading() { }
+}
+
+public extension URLSession {
+    static var mock: URLSession {
+        let configuration = URLSessionConfiguration.default
+        configuration.protocolClasses = [MockURLProtocol.self]
+        return .init(configuration: configuration)
+    }
 }
