@@ -16,18 +16,12 @@ public extension URLRequest {
 		let url = try URL(baseUrl: baseUrl, target)
 		self.init(url: url)
 		
-		let contentTypeKey = "Content-Type"
-		let contentTypeJson = "application/json"
-			
-		var headers = target.headers ?? [:]
-		if target.body != nil,
-           headers[contentTypeKey] == nil,
-           headers[contentTypeKey]?.lowercased() == nil,
-           headers[contentTypeKey]?.lowercased().capitalized == nil {
-			headers[contentTypeKey] = contentTypeJson
-		}
-		
-		self.allHTTPHeaderFields = headers
+		self.allHTTPHeaderFields = target.headers
+        if target.body != nil,
+           self.value(forHTTPHeaderField: "Content-Type") == nil {
+            self.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
+        
 		self.httpMethod = target.method.rawValue
 		self.httpBody = target.body
 	}
