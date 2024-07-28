@@ -69,9 +69,12 @@ private extension RegularHost {
 			return try target.responseDataMapper(data)
 		} catch {
 			let extendedErrors = previousErrors.appending(error)
-			if !previousErrors.contains(where: { $0 == error }) {
+			if !previousErrors.contains(where: { $0 == error }),
+               let errorHandler,
+               errorHandler.canHandle(error: error) {
+                
 				logger.event(.errorResolutionStarted(error, previousErrors))
-				try await errorHandler?.handle(error: error)
+				try await errorHandler.handle(error: error)
 				logger.event(.errorResolutionFinished(error, previousErrors))
 				return try await recursiveRequest(target, previousErrors: extendedErrors)
 			} else {
