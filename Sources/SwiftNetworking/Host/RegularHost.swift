@@ -87,7 +87,7 @@ private extension RegularHost {
 		var signedTarget = target
 		if let preprocessor = requestPreprocessor {
 			logger.event(.preprocess(preprocessor, target))
-			preprocessor.preprocess(&signedTarget)
+			try preprocessor.preprocess(&signedTarget)
 		}
 		let baseUrlString = protocolName + "://" + address
 		let request = try URLRequest(baseUrl: baseUrlString, signedTarget)

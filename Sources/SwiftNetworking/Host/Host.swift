@@ -41,15 +41,15 @@ public protocol RequestPreprocessor: AnyObject {
 	func preprocess(
 		_ target: inout some Target,
 		rewriteExistedData: Bool
-	)
+	) throws
 }
 
 public extension RequestPreprocessor {
 	
 	func preprocess(
 		_ target: inout some Target
-	) {
-		preprocess(&target, rewriteExistedData: false)
+	) throws {
+		try preprocess(&target, rewriteExistedData: false)
 	}
 }
 
