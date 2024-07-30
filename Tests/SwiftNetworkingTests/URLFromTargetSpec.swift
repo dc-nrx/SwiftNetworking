@@ -32,9 +32,24 @@ final class URLFromTargetSpec: XCTestCase {
 		let request = try! URLRequest(baseUrl: sampleHostName + "/", target)
 		validate(request: request)
 	}
-
+    
 	// MARK: - Query
 	
+    func testQuery_nilValueIgnored() {
+        let target = PlainTarget(
+            "/sample",
+            query: [
+                "p1": 42,
+                "p2": nil,
+                "p3": "1"
+            ]
+        )
+        let req = try! URLRequest(baseUrl: sampleHostName, target)
+        let queryItems = req.url!.query()!
+        print(queryItems)
+        XCTAssertEqual(queryItems.components(separatedBy: "&").count, 2)
+    }
+    
 //	func testQueryItems_StringValues() {
 //
 //	}

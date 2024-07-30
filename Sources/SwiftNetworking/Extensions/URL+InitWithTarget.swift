@@ -50,7 +50,9 @@ private extension URL {
 		_ query: Query?
 	) -> URL? {
 		var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: false)!
-		urlComponents.queryItems = query?.map { URLQueryItem(name: $0, value: "\($1)") }
+		urlComponents.queryItems = query?
+            .filter { $1 != nil }
+            .map { URLQueryItem(name: $0, value: "\($1!)") }
 		urlComponents.percentEncodedQuery = urlComponents.percentEncodedQuery?.replacingOccurrences(of: "+", with: "%2B")
 		return urlComponents.url
 	}

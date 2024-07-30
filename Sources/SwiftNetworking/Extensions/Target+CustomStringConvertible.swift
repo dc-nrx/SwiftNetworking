@@ -12,9 +12,10 @@ public extension Target {
 	var description: String {
 		var queryString = ""
 		if let query = query,
-		   !query.isEmpty {
+           !query.values.compactMap({ $0 }).isEmpty {
 			queryString += "?"
 			for (key, value) in query {
+                guard let value else { continue }
 				queryString += key + "=" + value.description
 			}
 		}

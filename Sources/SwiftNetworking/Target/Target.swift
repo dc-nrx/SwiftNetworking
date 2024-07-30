@@ -2,7 +2,7 @@ import Foundation
 
 public typealias QueryItem = CustomStringConvertible
 
-public typealias Query = [String: QueryItem]
+public typealias Query = [String: QueryItem?]
 
 public typealias Headers = [String: String]
 
