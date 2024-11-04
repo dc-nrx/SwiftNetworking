@@ -50,6 +50,21 @@ final class URLFromTargetSpec: XCTestCase {
         XCTAssertEqual(queryItems.components(separatedBy: "&").count, 2)
     }
     
+    func testQuery_arrayIsCorrect() {
+        let target = PlainTarget(
+            "/sample",
+            query: [
+                "p1": 42,
+                "p2": [1,2,3],
+                "p3": "1"
+            ]
+        )
+        let req = try! URLRequest(baseUrl: sampleHostName, target)
+        let queryItems = req.url!.query()!
+        print(queryItems)
+        XCTAssertEqual(queryItems.components(separatedBy: "&").count, 5)
+    }
+    
 //	func testQueryItems_StringValues() {
 //
 //	}

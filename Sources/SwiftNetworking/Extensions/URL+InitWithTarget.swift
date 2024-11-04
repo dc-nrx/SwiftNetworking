@@ -50,10 +50,22 @@ private extension URL {
 		_ query: Query?
 	) -> URL? {
 		var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: false)!
-		urlComponents.queryItems = query?
-            .filter { $1 != nil }
-            .map { URLQueryItem(name: $0, value: "\($1!)") }
-		urlComponents.percentEncodedQuery = urlComponents.percentEncodedQuery?.replacingOccurrences(of: "+", with: "%2B")
+        if let query {
+            var queryItems = [URLQueryItem]()
+            for key in query.keys {
+                guard let value = query[key], value != nil else { continue }
+                if let collection = value as? any Collection {
+                    collection.forEach {
+                        queryItems.append(.init(name: "\(key)[]", value: "\($0)"))
+                    }
+                } else {
+                    queryItems.append(.init(name: key, value: "\(value!)"))
+                }
+                
+            }
+            urlComponents.queryItems = queryItems
+            urlComponents.percentEncodedQuery = urlComponents.percentEncodedQuery?.replacingOccurrences(of: "+", with: "%2B")
+        }
 		return urlComponents.url
 	}
 }
