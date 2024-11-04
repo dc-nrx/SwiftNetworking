@@ -54,7 +54,7 @@ private extension URL {
             var queryItems = [URLQueryItem]()
             for key in query.keys {
                 guard let value = query[key], value != nil else { continue }
-                if let collection = value as? any Collection {
+                if let collection = value as? any RandomAccessCollection {
                     collection.forEach {
                         queryItems.append(.init(name: "\(key)[]", value: "\($0)"))
                     }

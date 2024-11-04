@@ -56,7 +56,7 @@ final class URLFromTargetSpec: XCTestCase {
             query: [
                 "p1": 42,
                 "p2": [1,2,3],
-                "p3": "1"
+                "p3": "1234567"
             ]
         )
         let req = try! URLRequest(baseUrl: sampleHostName, target)
