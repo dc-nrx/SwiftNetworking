@@ -15,30 +15,45 @@ public enum RegularHostError: Error {
 }
 
 open class RegularHost: Host {
+    public typealias RequestClosure = (URLRequest) async throws -> (Data, URLResponse)
 	
 	public var protocolName: String
 	public var address: String
-	public var session: URLSession
-
+    
 	public var requestPreprocessor: RequestPreprocessor?
 	public var errorHandler: ErrorHandler?
 	
-	private let logger = Logger(subsystem: "Networking", category: "RegularHost")
-	
-	public init(
-		protocolName: String = "https",
-		_ address: String,
-		requestPreprocessor: RequestPreprocessor? = nil,
-		errorHandler: ErrorHandler? = nil,
-		session: URLSession = .shared
-	) {
-		self.protocolName = protocolName
-		self.address = address
-		self.requestPreprocessor = requestPreprocessor
-		self.errorHandler = errorHandler
-		self.session = session
-	}
-	
+    private var executor: Executor
+    private let logger = Logger(subsystem: "Networking", category: "RegularHost")
+
+    public init(
+        protocolName: String = "https",
+        _ address: String,
+        requestPreprocessor: RequestPreprocessor? = nil,
+        errorHandler: ErrorHandler? = nil,
+        session: URLSession = .shared
+    ) {
+        self.protocolName = protocolName
+        self.address = address
+        self.requestPreprocessor = requestPreprocessor
+        self.errorHandler = errorHandler
+        self.executor = .session(session)
+    }
+    
+    public init(
+        protocolName: String = "https",
+        _ address: String,
+        requestPreprocessor: RequestPreprocessor? = nil,
+        errorHandler: ErrorHandler? = nil,
+        requestClosure: @escaping RequestClosure
+    ) {
+        self.protocolName = protocolName
+        self.address = address
+        self.requestPreprocessor = requestPreprocessor
+        self.errorHandler = errorHandler
+        self.executor = .closure(requestClosure)
+    }
+
 	/**
 	 Send the request.
 	 
@@ -63,7 +78,7 @@ private extension RegularHost {
 		let urlRequest = try preprocessedUrlRequest(from: target)
 		do {
 			logger.event(.sending(urlRequest, previousErrors))
-			let (data, response) = try await session.data(for: urlRequest)
+            let (data, response) = try await executor.data(for: urlRequest)
 			try verifyResponseCodeSuccessfull(data: data, response: response)
 			logger.event(.responseRecieved(data, response))
 			return try target.responseDataMapper(data)

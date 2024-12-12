@@ -14,7 +14,6 @@ public protocol Host {
 
 	var protocolName: String { get }
 	var address: String { get }
-	var session: URLSession { get }
 	
 	var requestPreprocessor: RequestPreprocessor? { get }
 	var errorHandler: ErrorHandler? { get }
@@ -30,7 +29,6 @@ public extension Host {
 	
 	var requestPreprocessor: RequestPreprocessor? { nil }
 	var errorHandler: ErrorHandler? { nil }
-	var session: URLSession { .shared }
 }
 
 /**
