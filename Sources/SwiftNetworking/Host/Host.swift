@@ -56,6 +56,11 @@ public extension RequestPreprocessor {
  */
 public protocol ErrorHandler {
 
+    /**
+     Refresh token, or do any other job needed.
+     */
+    func prepareForExecution<T: Target>(_ target: T) async throws
+    
 	/**
 	 Try to handle the error (i.e. refresh token for token expired / unauthorized case)
 	 */
@@ -65,6 +70,19 @@ public protocol ErrorHandler {
 	 Depending on the `error` nature, make the decision whether there is a way to fix it (and maybe re-send the request once again).
 	 */
 	func canHandle(error: Error) -> Bool
+}
+
+public extension ErrorHandler {
+    func prepareForExecution<T: Target>(_ target: T) async throws { }
+    
+    func canHandle(error: Error) -> Bool {
+        switch error {
+        case let RegularHostError.httpStatusError(_, httpResponse):
+            httpResponse.statusCode == 401
+        default:
+            false
+        }
+    }
 }
 
 //TODO: Add ResponsePreprocessor

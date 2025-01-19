@@ -33,12 +33,17 @@ open class RequestPreprocessorMock: RequestPreprocessor {
 }
 
 open class ErrorHandlerMock: ErrorHandler {
-	
-	open var refreshTokenRequiredMock = false
+    
+    open var refreshTokenRequiredMock = false
 	open var tokenRefreshCount = 0
-	
+    open var prepForExec: ((any Target) async throws -> ())?
+    
 	public init() { }
 	
+    public func prepareForExecution<T: Target>(_ target: T) async throws {
+        try await prepForExec?(target)
+    }
+    
 	open func handle(error: Error) async throws {
 		tokenRefreshCount += 1
 	}

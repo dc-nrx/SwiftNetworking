@@ -17,11 +17,11 @@ public enum RegularHostError: Error {
 open class RegularHost: Host {
     public typealias RequestClosure = (URLRequest) async throws -> (Data, URLResponse)
 	
-	public var protocolName: String
-	public var address: String
+    open var protocolName: String
+    open var address: String
     
-	public var requestPreprocessor: RequestPreprocessor?
-	public var errorHandler: ErrorHandler?
+	open var requestPreprocessor: RequestPreprocessor?
+    open var errorHandler: ErrorHandler?
 	
     private var executor: Executor
     private let logger = Logger(subsystem: "Networking", category: "RegularHost")
@@ -75,6 +75,7 @@ private extension RegularHost {
 		_ target: T,
 		previousErrors: [Error] = []
 	) async throws -> T.Response {
+        try await errorHandler?.prepareForExecution(target)
 		let urlRequest = try preprocessedUrlRequest(from: target)
 		do {
 			logger.event(.sending(urlRequest, previousErrors))
@@ -87,7 +88,6 @@ private extension RegularHost {
 			if !previousErrors.contains(where: { $0 == error }),
                let errorHandler,
                errorHandler.canHandle(error: error) {
-                
 				logger.event(.errorResolutionStarted(error, previousErrors))
 				try await errorHandler.handle(error: error)
 				logger.event(.errorResolutionFinished(error, previousErrors))
